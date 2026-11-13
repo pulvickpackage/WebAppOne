@@ -1,0 +1,2279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pulvick Packaging Industries — CRM</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* ============ TOKENS ============ */
+:root{
+  --bg:#EFF1EE; --surface:#FFFFFF; --surface-alt:#E6E9E2; --surface-sunk:#E2E5DE;
+  --ink:#1B221D; --ink-muted:#5B645C; --ink-faint:#8A9187;
+  --border:#D7DAD2; --border-strong:#C2C7BC;
+  --accent:#22385A; --accent-hover:#1A2C47; --accent-soft:#E5EAF1; --accent-ink:#22385A;
+  --hot:#1E9D57; --hot-soft:#E4F5EA;
+  --medium:#B4870A; --medium-soft:#FBF1DB;
+  --cold:#2F6FED; --cold-soft:#E7EEFD;
+  --danger:#C1432B; --danger-soft:#FBEAE6;
+  --high:#B3540B; --high-soft:#FBE8D6;
+  --shadow-modal: 0 20px 48px rgba(20,26,20,0.22);
+  --radius-sm:6px; --radius-md:10px;
+  --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#14161A; --surface:#1C1F24; --surface-alt:#22262C; --surface-sunk:#191C21;
+    --ink:#E9ECE7; --ink-muted:#A7ADA4; --ink-faint:#767D73;
+    --border:#2C3036; --border-strong:#3A3F46;
+    --accent:#6E8CBE; --accent-hover:#87A2D2; --accent-soft:#20293A; --accent-ink:#9DB6E0;
+    --hot:#3FCB7E; --hot-soft:#12291D;
+    --medium:#E0B23C; --medium-soft:#2E2712;
+    --cold:#6C97F5; --cold-soft:#1B2740;
+    --danger:#E2775F; --danger-soft:#331B16;
+    --high:#E29A5C; --high-soft:#3A2716;
+    --shadow-modal: 0 20px 48px rgba(0,0,0,0.5);
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#14161A; --surface:#1C1F24; --surface-alt:#22262C; --surface-sunk:#191C21;
+  --ink:#E9ECE7; --ink-muted:#A7ADA4; --ink-faint:#767D73;
+  --border:#2C3036; --border-strong:#3A3F46;
+  --accent:#6E8CBE; --accent-hover:#87A2D2; --accent-soft:#20293A; --accent-ink:#9DB6E0;
+  --hot:#3FCB7E; --hot-soft:#12291D;
+  --medium:#E0B23C; --medium-soft:#2E2712;
+  --cold:#6C97F5; --cold-soft:#1B2740;
+  --danger:#E2775F; --danger-soft:#331B16;
+  --high:#E29A5C; --high-soft:#3A2716;
+  --shadow-modal: 0 20px 48px rgba(0,0,0,0.5);
+}
+*{box-sizing:border-box;}
+html,body{height:100%;}
+body{
+  margin:0; background:var(--bg); color:var(--ink); font-family:var(--font);
+  font-size:14px; line-height:1.5; -webkit-font-smoothing:antialiased;
+}
+::selection{ background:var(--accent-soft); }
+a{color:var(--accent-ink);}
+button{font-family:var(--font);}
+input,select,textarea{font-family:var(--font);}
+:focus-visible{ outline:2px solid var(--accent); outline-offset:2px; border-radius:4px;}
+::-webkit-scrollbar{width:10px;height:10px;}
+::-webkit-scrollbar-thumb{background:var(--border-strong); border-radius:8px;}
+::-webkit-scrollbar-track{background:transparent;}
+
+/* ============ LOGIN ============ */
+#login-screen{
+  min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px;
+  background:
+    radial-gradient(1200px 500px at 15% -10%, var(--accent-soft), transparent 60%), var(--bg);
+}
+.login-card{
+  width:100%; max-width:380px; background:var(--surface); border:1px solid var(--border);
+  border-radius:var(--radius-md); padding:36px 32px; box-shadow: var(--shadow-modal);
+}
+.login-mark{ display:flex; align-items:center; gap:10px; margin-bottom:26px; }
+.login-mark .box{ width:38px;height:38px;border-radius:9px;background:#fff; border:1px solid var(--border); display:flex;align-items:center;justify-content:center; padding:4px; flex-shrink:0;}
+.login-mark .box img{ width:100%; height:100%; object-fit:contain; display:block; }
+.login-mark .name{ font-weight:800; font-size:16.5px; letter-spacing:-0.01em; line-height:1.25;}
+.login-mark .sub{ font-size:11.5px; color:var(--ink-muted); margin-top:1px;}
+.login-mark .gst{ font-size:10px; color:var(--ink-faint); margin-top:1px;}
+.login-card h1{ font-size:20px; margin:0 0 4px; font-weight:700; letter-spacing:-0.01em;}
+.login-card p.desc{ margin:0 0 22px; color:var(--ink-muted); font-size:13px;}
+.field{ margin-bottom:16px; }
+.field label{ display:block; font-size:12.5px; font-weight:600; margin-bottom:6px; color:var(--ink-muted);}
+.field label .req{ color:var(--danger); }
+.select-wrap, .input-wrap{ position:relative; }
+select, input[type=text], input[type=tel], input[type=number], input[type=date], input[type=time], input[type=password], textarea{
+  width:100%; padding:10px 12px; border:1px solid var(--border-strong); background:var(--surface);
+  border-radius:var(--radius-sm); color:var(--ink); font-size:13.5px; transition:border-color .12s;
+}
+select{ appearance:none; -webkit-appearance:none; padding-right:32px;
+  background-image:url("data:image/svg+xml;utf8,<svg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%235B645C' stroke-width='2.4' stroke-linecap='round'><polyline points='6 9 12 15 18 9'/></svg>");
+  background-repeat:no-repeat; background-position:right 10px center;
+}
+input:focus, select:focus, textarea:focus{ border-color:var(--accent); }
+textarea{ resize:vertical; min-height:70px; }
+.role-grid{ display:grid; grid-template-columns:1fr 1fr 1fr; gap:8px; margin-bottom:18px; }
+.role-opt{ border:1px solid var(--border-strong); border-radius:var(--radius-sm); padding:10px 6px; text-align:center; cursor:pointer; font-size:12.5px; font-weight:600; color:var(--ink-muted); background:var(--surface); transition:all .12s;}
+.role-opt.active{ border-color:var(--accent); color:var(--accent-ink); background:var(--accent-soft); }
+.auth-error{ background:var(--danger-soft); color:var(--danger); border:1px solid var(--danger); border-radius:var(--radius-sm); padding:9px 11px; font-size:12px; font-weight:600; margin-bottom:14px; }
+.perm-pill{ display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:20px; font-size:11px; font-weight:700; background:var(--surface-alt); color:var(--ink-muted); }
+.perm-pill.on{ background:var(--hot-soft); color:var(--hot); }
+.hier-tree{ font-size:12.5px; }
+.hier-node{ display:flex; align-items:center; gap:8px; padding:7px 0; }
+.hier-node .hn-avatar{ width:26px;height:26px;border-radius:50%; background:var(--surface-alt); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:10.5px; color:var(--accent-ink); flex-shrink:0;}
+.hier-node.me .hn-avatar{ background:var(--accent); color:#fff; border-color:var(--accent); }
+.hier-node .hn-name{ font-weight:700; }
+.hier-node .hn-role{ font-size:11px; color:var(--ink-faint); font-weight:500; }
+.hier-children{ margin-left:31px; border-left:1.5px solid var(--border); padding-left:14px; }
+.hier-l2{ margin-left:31px; border-left:1.5px solid var(--border); padding-left:14px; }
+.prio-badge{ display:inline-flex; align-items:center; gap:5px; padding:3px 9px; border-radius:20px; font-size:10.5px; font-weight:800; text-transform:uppercase; letter-spacing:.03em; }
+.prio-badge.critical{ background:var(--danger-soft); color:var(--danger); }
+.prio-badge.high{ background:var(--high-soft); color:var(--high); }
+.prio-badge.medium{ background:var(--cold-soft); color:var(--cold); }
+.prio-badge.low{ background:var(--surface-alt); color:var(--ink-faint); }
+.notif-card{ background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--border-strong); border-radius:var(--radius-sm); padding:14px 16px; margin-bottom:10px; }
+.notif-card.unread{ background:var(--accent-soft); }
+.notif-card.critical{ border-left-color:var(--danger); }
+.notif-card.high{ border-left-color:var(--high); }
+.notif-card.medium{ border-left-color:var(--cold); }
+.notif-card.low{ border-left-color:var(--border-strong); }
+.notif-head{ display:flex; align-items:center; justify-content:space-between; gap:10px; margin-bottom:6px; flex-wrap:wrap; }
+.notif-title{ font-weight:700; font-size:13.5px; }
+.notif-time{ font-size:11px; color:var(--ink-faint); }
+.notif-msg{ font-size:12.5px; color:var(--ink-muted); white-space:pre-line; margin-bottom:10px; line-height:1.5; }
+.notif-actions{ display:flex; gap:8px; flex-wrap:wrap; }
+.btn{
+  display:inline-flex; align-items:center; justify-content:center; gap:6px; cursor:pointer;
+  border-radius:var(--radius-sm); border:1px solid transparent; font-weight:600; font-size:13.5px;
+  padding:10px 16px; transition:background .12s, border-color .12s, opacity .12s; white-space:nowrap;
+}
+.btn-primary{ background:var(--accent); color:#fff; }
+.btn-primary:hover{ background:var(--accent-hover); }
+.btn-primary:disabled{ opacity:.5; cursor:not-allowed; }
+.btn-block{ width:100%; }
+.btn-secondary{ background:var(--surface); border-color:var(--border-strong); color:var(--ink); }
+.btn-secondary:hover{ background:var(--surface-alt); }
+.btn-ghost{ background:transparent; border-color:transparent; color:var(--ink-muted); }
+.btn-ghost:hover{ background:var(--surface-alt); color:var(--ink); }
+.btn-sm{ padding:6px 11px; font-size:12.5px; }
+.btn-danger{ background:var(--danger); color:#fff; }
+.btn-danger:hover{ opacity:.9; }
+.hidden{ display:none !important; }
+
+/* ============ APP SHELL ============ */
+#app{ display:none; min-height:100vh; }
+#app.active{ display:flex; }
+.sidebar{
+  width:224px; flex-shrink:0; background:var(--surface); border-right:1px solid var(--border);
+  display:flex; flex-direction:column; height:100vh; position:sticky; top:0;
+}
+.sidebar-brand{ display:flex; align-items:center; gap:10px; padding:18px 18px 14px; }
+.sidebar-brand .box{ width:32px;height:32px;border-radius:8px;background:#fff; border:1px solid var(--border); display:flex;align-items:center;justify-content:center; padding:3px; flex-shrink:0;}
+.sidebar-brand .box img{ width:100%; height:100%; object-fit:contain; display:block; }
+.sidebar-brand .name{ font-weight:800; font-size:13.5px; letter-spacing:-0.01em; line-height:1.25;}
+.sidebar-brand .sub{ font-size:10px; color:var(--ink-faint); margin-top:1px;}
+.sidebar-nav{ flex:1; padding:6px 10px; overflow-y:auto; }
+.nav-item{
+  display:flex; align-items:center; gap:10px; padding:9px 10px; border-radius:var(--radius-sm);
+  color:var(--ink-muted); font-size:13.5px; font-weight:500; cursor:pointer; margin-bottom:2px; user-select:none;
+}
+.nav-item svg{ width:17px; height:17px; flex-shrink:0; }
+.nav-item:hover{ background:var(--surface-alt); color:var(--ink); }
+.nav-item.active{ background:var(--accent-soft); color:var(--accent-ink); font-weight:600; }
+.nav-item .count{ margin-left:auto; font-size:11px; font-weight:700; color:var(--ink-faint); }
+.nav-item.active .count{ color:var(--accent-ink); }
+.nav-sep{ height:1px; background:var(--border); margin:10px 4px; }
+.nav-label{ font-size:10.5px; font-weight:700; text-transform:uppercase; letter-spacing:.06em; color:var(--ink-faint); padding:12px 12px 4px; }
+.sidebar-foot{ padding:14px; border-top:1px solid var(--border); }
+.user-chip{ display:flex; align-items:center; gap:9px; }
+.avatar{ width:30px;height:30px;border-radius:50%; background:var(--surface-alt); border:1px solid var(--border); display:flex; align-items:center; justify-content:center; font-weight:700; font-size:12px; color:var(--accent-ink); flex-shrink:0;}
+.user-chip .uname{ font-size:12.5px; font-weight:600; line-height:1.2;}
+.user-chip .urole{ font-size:10.5px; color:var(--ink-faint);}
+.logout-link{ margin-left:auto; cursor:pointer; color:var(--ink-faint); display:flex; }
+.logout-link:hover{ color:var(--danger); }
+
+.main{ flex:1; min-width:0; display:flex; flex-direction:column; height:100vh; overflow:hidden; }
+.topbar{
+  height:60px; flex-shrink:0; display:flex; align-items:center; gap:14px; padding:0 22px;
+  border-bottom:1px solid var(--border); background:var(--surface);
+}
+.topbar h2{ font-size:16px; font-weight:700; margin:0; letter-spacing:-0.01em; }
+.topbar-search{ flex:1; max-width:360px; position:relative; }
+.topbar-search svg{ position:absolute; left:10px; top:50%; transform:translateY(-50%); width:15px; height:15px; color:var(--ink-faint); }
+.topbar-search input{ padding-left:32px; background:var(--surface-sunk); border-color:var(--border); }
+.topbar-actions{ margin-left:auto; display:flex; align-items:center; gap:10px; }
+.theme-toggle{ width:34px;height:34px; border-radius:8px; border:1px solid var(--border-strong); background:var(--surface); display:flex; align-items:center; justify-content:center; cursor:pointer; color:var(--ink-muted);}
+.theme-toggle:hover{ background:var(--surface-alt); }
+.theme-toggle svg{ width:16px; height:16px; }
+
+.view{ flex:1; overflow-y:auto; padding:24px 26px 60px; }
+.view-head{ display:flex; align-items:flex-end; justify-content:space-between; margin-bottom:20px; gap:16px; flex-wrap:wrap;}
+.view-head h1{ font-size:21px; font-weight:800; margin:0 0 2px; letter-spacing:-0.015em; }
+.view-head .sub{ font-size:12.5px; color:var(--ink-muted); }
+.view-head-actions{ display:flex; gap:8px; }
+
+/* ============ KPI STRIP ============ */
+.kpi-strip{
+  display:grid; grid-template-columns:repeat(8,1fr); border:1px solid var(--border); border-radius:var(--radius-md);
+  background:var(--surface); overflow:hidden; margin-bottom:22px;
+}
+.kpi{ padding:16px 14px; border-right:1px solid var(--border); cursor:pointer; transition:background .12s;}
+.kpi:last-child{ border-right:none; }
+.kpi:hover{ background:var(--surface-alt); }
+.kpi .val{ font-size:23px; font-weight:800; letter-spacing:-0.02em; line-height:1; margin-bottom:6px;}
+.kpi .lbl{ font-size:11px; color:var(--ink-muted); font-weight:600; }
+.kpi.hot .val{ color:var(--hot); } .kpi.medium .val{ color:var(--medium); } .kpi.cold .val{ color:var(--cold); }
+.kpi.overdue .val{ color:var(--danger); }
+
+.grid-2col{ display:grid; grid-template-columns: 1.4fr 1fr; gap:18px; align-items:start; }
+@media (max-width:1080px){ .grid-2col{ grid-template-columns:1fr; } }
+
+.panel{ background:var(--surface); border:1px solid var(--border); border-radius:var(--radius-md); overflow:hidden;}
+.panel-head{ display:flex; align-items:center; justify-content:space-between; padding:14px 16px; border-bottom:1px solid var(--border);}
+.panel-head h3{ margin:0; font-size:13.5px; font-weight:700; }
+.panel-body{ padding:4px 0; }
+.panel-body.pad{ padding:16px; }
+
+table{ width:100%; border-collapse:collapse; font-size:13px; }
+thead th{ text-align:left; font-size:10.5px; text-transform:uppercase; letter-spacing:.05em; color:var(--ink-faint); font-weight:700; padding:9px 14px; border-bottom:1px solid var(--border); white-space:nowrap; background:var(--surface-sunk); position:sticky; top:0; }
+tbody td{ padding:10px 14px; border-bottom:1px solid var(--border); vertical-align:middle; }
+tbody tr:last-child td{ border-bottom:none; }
+tbody tr.rowclick{ cursor:pointer; }
+tbody tr.rowclick:hover{ background:var(--surface-alt); }
+td.num{ text-align:right; font-variant-numeric:tabular-nums; }
+
+.badge{ display:inline-flex; align-items:center; gap:5px; padding:3px 9px 3px 7px; border-radius:20px; font-size:11.5px; font-weight:700; }
+.badge .dot{ width:6px;height:6px;border-radius:50%; }
+.badge.hot{ background:var(--hot-soft); color:var(--hot); } .badge.hot .dot{ background:var(--hot); }
+.badge.medium{ background:var(--medium-soft); color:var(--medium); } .badge.medium .dot{ background:var(--medium); }
+.badge.cold{ background:var(--cold-soft); color:var(--cold); } .badge.cold .dot{ background:var(--cold); }
+.badge.won{ background:var(--hot-soft); color:var(--hot); }
+.badge.lost{ background:var(--danger-soft); color:var(--danger); }
+.badge.neutral{ background:var(--surface-alt); color:var(--ink-muted); }
+.stripe{ width:4px; align-self:stretch; border-radius:3px; display:inline-block; margin-right:2px; }
+
+/* ============ FILTER BAR ============ */
+.filter-bar{ display:flex; gap:8px; flex-wrap:wrap; margin-bottom:16px; align-items:center; }
+.filter-bar select, .filter-bar input{ width:auto; min-width:120px; padding:8px 30px 8px 10px; font-size:12.5px; }
+.filter-bar input[type=text]{ min-width:200px; padding-right:10px; }
+.filter-chip{ padding:7px 11px; border-radius:20px; border:1px solid var(--border-strong); font-size:12px; font-weight:600; color:var(--ink-muted); cursor:pointer; background:var(--surface); }
+.filter-chip.active{ background:var(--accent); color:#fff; border-color:var(--accent); }
+
+/* ============ FORM ============ */
+.form-grid{ display:grid; grid-template-columns: repeat(2,1fr); gap:14px 18px; }
+.form-grid .span2{ grid-column:1/-1; }
+@media (max-width:720px){ .form-grid{ grid-template-columns:1fr; } }
+.checkbox-row{ display:flex; align-items:center; gap:7px; margin-top:6px; font-size:12.5px; color:var(--ink-muted); }
+.checkbox-row input{ width:auto; }
+.chip-grid{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+@media (max-width:640px){ .chip-grid{ grid-template-columns:repeat(2,1fr);} }
+.chip-check{ display:flex; align-items:center; gap:8px; padding:9px 10px; border:1px solid var(--border-strong); border-radius:var(--radius-sm); font-size:12.5px; cursor:pointer; user-select:none; background:var(--surface);}
+.chip-check.checked{ border-color:var(--accent); background:var(--accent-soft); color:var(--accent-ink); font-weight:600;}
+.chip-check input{ width:auto; margin:0; }
+.qty-row{ display:grid; grid-template-columns:1fr 110px; gap:10px; }
+.status-pick{ display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+.status-opt{ border:1.5px solid var(--border-strong); border-radius:var(--radius-sm); padding:10px; text-align:center; cursor:pointer; font-weight:700; font-size:12.5px; }
+.status-opt.hot{ color:var(--hot); } .status-opt.medium{ color:var(--medium); } .status-opt.cold{ color:var(--cold); }
+.status-opt.hot.checked{ background:var(--hot-soft); border-color:var(--hot); }
+.status-opt.medium.checked{ background:var(--medium-soft); border-color:var(--medium); }
+.status-opt.cold.checked{ background:var(--cold-soft); border-color:var(--cold); }
+.dup-banner{ display:none; align-items:flex-start; gap:10px; background:var(--medium-soft); border:1px solid var(--medium); border-radius:var(--radius-sm); padding:12px 14px; margin-bottom:16px; font-size:12.5px; }
+.dup-banner.show{ display:flex; }
+.dup-banner strong{ display:block; margin-bottom:2px; }
+.form-actions{ display:flex; justify-content:flex-end; gap:10px; margin-top:22px; padding-top:16px; border-top:1px solid var(--border); }
+
+/* ============ FOLLOWUP CARDS ============ */
+.fu-section{ margin-bottom:26px; }
+.fu-section h3{ font-size:13px; font-weight:700; margin:0 0 10px; display:flex; align-items:center; gap:8px;}
+.fu-section h3 .n{ background:var(--surface-alt); color:var(--ink-muted); padding:1px 8px; border-radius:10px; font-size:11px; }
+.fu-grid{ display:grid; grid-template-columns:repeat(auto-fill,minmax(260px,1fr)); gap:12px; }
+.fu-card{ background:var(--surface); border:1px solid var(--border); border-left:3px solid var(--border-strong); border-radius:var(--radius-sm); padding:13px 14px; }
+.fu-card.hot{ border-left-color:var(--hot); } .fu-card.medium{ border-left-color:var(--medium); } .fu-card.cold{ border-left-color:var(--cold); }
+.fu-card .company{ font-weight:700; font-size:13.5px; margin-bottom:1px; }
+.fu-card .contact{ font-size:12px; color:var(--ink-muted); margin-bottom:8px; }
+.fu-card .meta{ font-size:12px; color:var(--ink-muted); margin-bottom:2px; }
+.fu-card .when{ font-size:12px; font-weight:700; margin:8px 0 10px; }
+.fu-card.overdue .when{ color:var(--danger); }
+.fu-card-actions{ display:flex; gap:6px; flex-wrap:wrap; }
+.empty-state{ padding:34px 20px; text-align:center; color:var(--ink-faint); font-size:13px; border:1px dashed var(--border-strong); border-radius:var(--radius-md); }
+
+/* ============ REPORTS ============ */
+.bar-row{ display:grid; grid-template-columns:130px 1fr 46px; align-items:center; gap:10px; padding:7px 0; font-size:12.5px;}
+.bar-track{ height:9px; background:var(--surface-sunk); border-radius:5px; overflow:hidden;}
+.bar-fill{ height:100%; background:var(--accent); border-radius:5px; }
+.bar-row .n{ text-align:right; font-weight:700; font-variant-numeric:tabular-nums; }
+
+/* ============ MODAL ============ */
+.modal-overlay{ position:fixed; inset:0; background:rgba(15,18,15,.5); display:none; align-items:flex-start; justify-content:center; z-index:100; padding:40px 16px; overflow-y:auto;}
+.modal-overlay.show{ display:flex; }
+.modal{ background:var(--surface); border-radius:var(--radius-md); width:100%; max-width:600px; box-shadow:var(--shadow-modal); margin-bottom:40px;}
+.modal.wide{ max-width:860px; }
+.modal-head{ display:flex; align-items:center; justify-content:space-between; padding:18px 22px; border-bottom:1px solid var(--border); }
+.modal-head h3{ margin:0; font-size:15.5px; font-weight:700; }
+.modal-close{ cursor:pointer; color:var(--ink-faint); width:28px;height:28px; display:flex; align-items:center; justify-content:center; border-radius:6px;}
+.modal-close:hover{ background:var(--surface-alt); color:var(--ink); }
+.modal-body{ padding:22px; max-height:74vh; overflow-y:auto; }
+
+/* ============ DETAIL VIEW ============ */
+.detail-header{ display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:6px; flex-wrap:wrap;}
+.detail-title{ font-size:19px; font-weight:800; letter-spacing:-0.01em; }
+.detail-sub{ font-size:12.5px; color:var(--ink-muted); margin-top:2px;}
+.qa-row{ display:flex; gap:8px; flex-wrap:wrap; margin:14px 0 20px; }
+.info-list{ display:grid; grid-template-columns:1fr 1fr; gap:12px 18px; font-size:12.5px; }
+.info-list .k{ color:var(--ink-faint); font-size:10.5px; text-transform:uppercase; letter-spacing:.04em; font-weight:700; margin-bottom:2px;}
+.info-list .v{ font-weight:600; }
+.product-tags{ display:flex; flex-wrap:wrap; gap:5px; }
+.tag{ background:var(--surface-alt); border:1px solid var(--border); padding:2px 8px; border-radius:12px; font-size:11px; font-weight:600; }
+
+.timeline{ position:relative; padding-left:22px; }
+.timeline::before{ content:""; position:absolute; left:6px; top:4px; bottom:4px; width:1.5px; background:var(--border); }
+.tl-item{ position:relative; margin-bottom:20px; }
+.tl-item::before{ content:""; position:absolute; left:-22px; top:3px; width:10px; height:10px; border-radius:50%; background:var(--accent); border:2px solid var(--surface); box-shadow:0 0 0 1.5px var(--accent);}
+.tl-head{ display:flex; align-items:center; gap:8px; font-size:12px; color:var(--ink-muted); margin-bottom:3px; flex-wrap:wrap;}
+.tl-head .type{ font-weight:700; color:var(--ink); background:var(--accent-soft); color:var(--accent-ink); padding:2px 8px; border-radius:10px; font-size:11px;}
+.tl-note{ font-size:13px; background:var(--surface-sunk); border:1px solid var(--border); border-radius:var(--radius-sm); padding:10px 12px; margin-top:5px; }
+.tl-note .nf{ margin-top:6px; font-size:11.5px; color:var(--ink-muted); font-weight:600;}
+
+.stage-track{ display:flex; align-items:center; gap:0; margin:4px 0 20px; overflow-x:auto; padding-bottom:4px;}
+.stage-pt{ display:flex; align-items:center; flex-shrink:0; }
+.stage-dot{ width:9px;height:9px;border-radius:50%; background:var(--border-strong); flex-shrink:0;}
+.stage-pt.done .stage-dot{ background:var(--accent); }
+.stage-pt.current .stage-dot{ background:var(--hot); width:11px; height:11px;}
+.stage-lbl{ font-size:10.5px; color:var(--ink-faint); margin:0 8px; white-space:nowrap; font-weight:600;}
+.stage-pt.done .stage-lbl, .stage-pt.current .stage-lbl{ color:var(--ink); }
+.stage-line{ width:22px; height:1.5px; background:var(--border-strong); flex-shrink:0;}
+.stage-pt.done + .stage-line{ background:var(--accent); }
+
+.empty-hint{ font-size:12px; color:var(--ink-faint); text-align:center; padding:18px; }
+.toast-wrap{ position:fixed; bottom:20px; right:20px; z-index:200; display:flex; flex-direction:column; gap:8px;}
+.toast{ background:var(--ink); color:var(--bg); padding:11px 16px; border-radius:8px; font-size:12.5px; font-weight:600; box-shadow:var(--shadow-modal); animation:toastin .18s ease; }
+@keyframes toastin{ from{ opacity:0; transform:translateY(6px);} to{opacity:1; transform:translateY(0);} }
+</style>
+</head>
+<body>
+
+<!-- ============ LOGIN ============ -->
+<div id="login-screen">
+  <div class="login-card">
+    <div class="login-mark">
+      <div class="box"><img id="logo-img-login" alt="Pulvick Packaging Industries logo"></div>
+      <div>
+        <div class="name">Pulvick Packaging Industries</div>
+        <div class="sub">Cossipore, Kolkata, West Bengal</div>
+        <div class="gst">GST 19AAHFP0869P1ZF</div>
+      </div>
+    </div>
+
+    <div id="auth-pane-login">
+      <h1>Welcome back</h1>
+      <p class="desc">Sign in with the username and password your admin or manager gave you.</p>
+      <div class="field">
+        <label>Username <span class="req">*</span></label>
+        <input type="text" id="login-username" placeholder="e.g. admin" autocomplete="username">
+      </div>
+      <div class="field">
+        <label>Password <span class="req">*</span></label>
+        <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+      </div>
+      <div id="login-error" class="auth-error hidden">Incorrect username or password.</div>
+      <button class="btn btn-primary btn-block" id="login-btn">Sign in</button>
+      <p style="margin:14px 0 0;font-size:11.5px;color:var(--ink-faint);text-align:center;">Demo admin login — username <strong>admin</strong>, password <strong>pulkit@admin1</strong>.</p>
+      <p style="margin:8px 0 0;font-size:11.5px;color:var(--ink-faint);text-align:center;">No account? Ask your Admin or Manager to add you in <strong>Users</strong>.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ============ APP ============ -->
+<div id="app">
+  <aside class="sidebar">
+    <div class="sidebar-brand" title="Pulvick Packaging Industries · Cossipore, Kolkata, West Bengal · GST 19AAHFP0869P1ZF">
+      <div class="box"><img id="logo-img-sidebar" alt="Pulvick Packaging Industries logo"></div>
+      <div>
+        <div class="name">Pulvick Packaging</div>
+        <div class="sub">Cossipore, Kolkata</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebar-nav">
+      <div class="nav-item active" data-view="dashboard">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="9"/><rect x="14" y="3" width="7" height="5"/><rect x="14" y="12" width="7" height="9"/><rect x="3" y="16" width="7" height="5"/></svg>
+        Dashboard
+      </div>
+      <div class="nav-item" data-view="enquiries">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="8" y1="13" x2="16" y2="13"/><line x1="8" y1="17" x2="16" y2="17"/></svg>
+        Enquiries <span class="count" id="nav-count-enq">0</span>
+      </div>
+      <div class="nav-item" data-view="customers">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 21V19a4 4 0 0 1 4-4h4a4 4 0 0 1 4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M17 21v-2a4 4 0 0 0-3-3.87"/><path d="M13 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Customers
+      </div>
+      <div class="nav-item" data-view="followups">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+        Follow-ups <span class="count" id="nav-count-fu">0</span>
+      </div>
+      <div class="nav-item" data-view="reports">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+        Reports
+      </div>
+      <div class="nav-sep" id="nav-admin-sep"></div>
+      <div class="nav-label" id="nav-admin-label">Admin</div>
+      <div class="nav-item" data-view="notifications" id="nav-item-notifications">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+        WhatsApp alerts <span class="count" id="nav-count-notif">0</span>
+      </div>
+      <div class="nav-item" data-view="accounting" id="nav-item-accounting">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="M2 10h20"/><path d="M6 15h4"/></svg>
+        Accounting
+      </div>
+      <div class="nav-item" data-view="users" id="nav-item-users">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+        Users
+      </div>
+    </nav>
+    <div class="sidebar-foot">
+      <div class="user-chip">
+        <div class="avatar" id="avatar-initials">P</div>
+        <div>
+          <div class="uname" id="chip-name">Pulkit</div>
+          <div class="urole" id="chip-role">Salesperson</div>
+        </div>
+        <div class="logout-link" id="logout-btn" title="Sign out">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        </div>
+      </div>
+      <div style="font-size:9.5px;color:var(--ink-faint);margin-top:10px;letter-spacing:.01em;">GST 19AAHFP0869P1ZF</div>
+    </div>
+  </aside>
+
+  <div class="main">
+    <div class="topbar">
+      <h2 id="topbar-title">Dashboard</h2>
+      <div class="topbar-search">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+        <input type="text" id="global-search" placeholder="Search name, company, phone, city…">
+      </div>
+      <div class="topbar-actions">
+        <div class="theme-toggle hidden" id="bell-toggle" title="WhatsApp alerts" style="position:relative;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          <span id="bell-badge" class="hidden" style="position:absolute;top:-3px;right:-3px;width:15px;height:15px;border-radius:50%;background:var(--danger);color:#fff;font-size:9px;font-weight:800;display:flex;align-items:center;justify-content:center;">0</span>
+        </div>
+        <div class="theme-toggle" id="theme-toggle" title="Toggle theme">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
+        </div>
+        <button class="btn btn-primary" id="btn-new-enquiry">+ New Enquiry</button>
+      </div>
+    </div>
+
+    <!-- DASHBOARD -->
+    <div class="view" id="view-dashboard">
+      <div class="view-head">
+        <div><h1 id="dash-greeting">Good day, Pulkit</h1><div class="sub">Here's how enquiries are moving today.</div></div>
+      </div>
+      <div class="kpi-strip" id="kpi-strip"></div>
+      <div class="grid-2col">
+        <div class="panel">
+          <div class="panel-head"><h3>Salesperson performance</h3></div>
+          <div class="panel-body"><table id="sp-table"></table></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Follow-ups today</h3><span class="badge neutral" id="dash-fu-count">0</span></div>
+          <div class="panel-body pad" id="dash-fu-list"></div>
+        </div>
+      </div>
+      <div class="panel" style="margin-top:18px;">
+        <div class="panel-head"><h3>Team hierarchy</h3><span style="font-size:11px;color:var(--ink-faint);">Up to 2 levels below Admin</span></div>
+        <div class="panel-body pad"><div class="hier-tree" id="dash-hier-tree"></div></div>
+      </div>
+    </div>
+
+    <!-- ENQUIRIES -->
+    <div class="view hidden" id="view-enquiries">
+      <div class="view-head">
+        <div><h1>Enquiries</h1><div class="sub" id="enq-sub">All customer enquiries</div></div>
+        <div class="view-head-actions">
+          <button class="btn btn-secondary btn-sm" id="btn-export-csv">Export CSV</button>
+        </div>
+      </div>
+      <div class="filter-bar">
+        <select id="f-status"><option value="">All status</option><option value="hot">🟢 Hot</option><option value="medium">🟡 Medium</option><option value="cold">🔵 Cold</option></select>
+        <select id="f-salesperson"><option value="">All salespeople</option></select>
+        <select id="f-source"><option value="">All sources</option></select>
+        <select id="f-type"><option value="">All types</option><option>Retail</option><option>Corporate</option><option>Wholesale</option></select>
+        <select id="f-stage"><option value="">All outcomes</option><option value="open">Open</option><option value="won">Won</option><option value="lost">Lost</option></select>
+        <button class="filter-chip" id="f-reset">Reset</button>
+      </div>
+      <div class="panel">
+        <div class="panel-body"><table id="enq-table"></table></div>
+      </div>
+    </div>
+
+    <!-- CUSTOMERS -->
+    <div class="view hidden" id="view-customers">
+      <div class="view-head"><div><h1>Customers</h1><div class="sub">Companies grouped from enquiry history</div></div></div>
+      <div class="panel"><div class="panel-body"><table id="cust-table"></table></div></div>
+    </div>
+
+    <!-- FOLLOWUPS -->
+    <div class="view hidden" id="view-followups">
+      <div class="view-head"><div><h1>Follow-ups</h1><div class="sub">Today, upcoming and overdue, across the pipeline</div></div></div>
+      <div class="fu-section"><h3>🔴 Overdue <span class="n" id="fu-overdue-n">0</span></h3><div class="fu-grid" id="fu-overdue"></div></div>
+      <div class="fu-section"><h3>Today <span class="n" id="fu-today-n">0</span></h3><div class="fu-grid" id="fu-today"></div></div>
+      <div class="fu-section"><h3>Upcoming <span class="n" id="fu-upcoming-n">0</span></h3><div class="fu-grid" id="fu-upcoming"></div></div>
+    </div>
+
+    <!-- REPORTS -->
+    <div class="view hidden" id="view-reports">
+      <div class="view-head"><div><h1>Reports</h1><div class="sub">Lead source, product mix and salesperson output</div></div></div>
+      <div class="grid-2col">
+        <div class="panel"><div class="panel-head"><h3>Lead source</h3></div><div class="panel-body pad" id="rep-source"></div></div>
+        <div class="panel"><div class="panel-head"><h3>Product enquiry mix</h3></div><div class="panel-body pad" id="rep-product"></div></div>
+      </div>
+      <div class="panel" style="margin-top:18px;">
+        <div class="panel-head"><h3>Salesperson report</h3></div>
+        <div class="panel-body"><table id="rep-sp-table"></table></div>
+      </div>
+    </div>
+
+    <!-- ACCOUNTING -->
+    <div class="view hidden" id="view-accounting">
+      <div class="view-head">
+        <div><h1>Accounting</h1><div class="sub">Bridge won deals into your bookkeeping software</div></div>
+      </div>
+
+      <div class="panel" style="margin-bottom:18px;">
+        <div class="panel-head"><h3>How this works, honestly</h3></div>
+        <div class="panel-body pad" style="font-size:12.5px;color:var(--ink-muted);line-height:1.65;">
+          This CRM can't keep live accounts itself, and it can't silently push data into Zoho Books or Vyapar in the background — both would need real server credentials, and a browser-only app like this one can't hold those safely (nor is it allowed to call either company's servers directly from here).
+          <br><br>What it <em>can</em> do, and does below: the moment a deal is marked <strong>Won</strong>, turn it into a ready-to-import file — correct columns, GST-ready fields, one click to download. You then import that file into whichever software you use. It's not live sync, but it removes the re-typing.
+          <br><br>If you eventually want true live sync — an invoice created in Zoho Books automatically the second a deal is won, with payment status flowing back into this CRM — that needs a small backend service holding a Zoho OAuth token and calling Zoho's API server-side. That's a real, separate build (not something a static page can do), and I'm glad to build it when you're ready.
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:18px;">
+        <div class="panel-head"><h3>Vyapar vs Zoho Books — which fits Pulvick</h3></div>
+        <div class="panel-body">
+          <table>
+            <thead><tr><th></th><th>Vyapar</th><th>Zoho Books</th></tr></thead>
+            <tbody>
+              <tr><td><strong>Programmatic integration</strong></td><td>None — no public API. Only manual Excel import of Parties/Items through its own template.</td><td>Real REST API (OAuth 2.0, JSON), <strong>included on the Free plan</strong> (1,000 calls/day).</td></tr>
+              <tr><td><strong>Cost</strong></td><td>Free tier is limited; most GST billing features sit behind a paid desktop licence.</td><td>Genuinely free indefinitely under ₹25 lakh/year turnover; GST-invoicing paid plans start around ₹899+GST/month after that.</td></tr>
+              <tr><td><strong>GST filing</strong></td><td>GST-ready invoices; filing itself is manual/via a CA.</td><td>Zoho is a registered GST Suvidha Provider — GSTR-1 &amp; GSTR-3B can be filed directly from the software.</td></tr>
+              <tr><td><strong>Best fit here</strong></td><td>If your team already lives in Vyapar day-to-day and won't switch.</td><td>Better long-term pick if you want this CRM to eventually sync automatically — the API path exists; with Vyapar it doesn't.</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="panel">
+        <div class="panel-head"><h3>Export won deals</h3></div>
+        <div class="panel-body pad">
+          <p style="font-size:12.5px;color:var(--ink-muted);margin:0 0 14px;">Exports every deal currently marked <strong>Won</strong>. Zoho's import screen lets you map these columns to its fields regardless of header names; for Vyapar, paste the matching columns into its own downloaded Party/Item template under Utilities → Import.</p>
+          <div style="display:flex;gap:10px;flex-wrap:wrap;">
+            <button class="btn btn-primary btn-sm" id="btn-export-zoho-all">Export all — Zoho Books CSV</button>
+            <button class="btn btn-secondary btn-sm" id="btn-export-vyapar-all">Export all — Vyapar reference CSV</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- USERS -->
+    <div class="view hidden" id="view-users">
+      <div class="view-head">
+        <div><h1>Users</h1><div class="sub" id="users-sub">Manage who can sign in to the CRM</div></div>
+        <div class="view-head-actions" id="users-head-actions"></div>
+      </div>
+      <div id="users-permission-banner"></div>
+      <div class="filter-bar">
+        <div class="topbar-search" style="max-width:280px;">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+          <input type="text" id="users-search" placeholder="Search by name, username or role…">
+        </div>
+      </div>
+      <div class="grid-2col">
+        <div class="panel">
+          <div class="panel-head"><h3 id="users-table-title">All users</h3></div>
+          <div class="panel-body"><table id="users-table"></table></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Reporting hierarchy</h3></div>
+          <div class="panel-body pad"><div class="hier-tree" id="users-hier-tree"></div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NOTIFICATIONS / WHATSAPP ALERTS -->
+    <div class="view hidden" id="view-notifications">
+      <div class="view-head">
+        <div><h1>WhatsApp alerts</h1><div class="sub">Auto-detected CRM events, ready to send to your phone in one tap</div></div>
+        <div class="view-head-actions">
+          <button class="btn btn-secondary btn-sm" id="btn-send-daily-report">Send daily report</button>
+          <button class="btn btn-ghost btn-sm" id="btn-mark-all-read">Mark all read</button>
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:18px;">
+        <div class="panel-head"><h3>How this works</h3></div>
+        <div class="panel-body pad" style="font-size:12.5px;color:var(--ink-muted);line-height:1.6;">
+          The CRM watches for hot leads, overdue follow-ups, won/lost deals and inactive salespeople, and turns each into a ready-to-send WhatsApp message below. Tapping <strong>Send to WhatsApp</strong> opens WhatsApp (app or web) with the message pre-filled to your number — you just hit send.
+          <br>This runs entirely in your browser. A fully automatic, always-on version — where the server itself pushes messages to your phone without you opening this tab — needs a real backend wired to the official WhatsApp Business API, which a browser-only page can't host securely (it would need to store API secrets and stay running 24/7). Ask me if you'd like that built as a proper backend service.
+        </div>
+      </div>
+
+      <div class="panel" style="margin-bottom:18px;">
+        <div class="panel-head"><h3>Settings</h3></div>
+        <div class="panel-body pad">
+          <div class="form-grid">
+            <div class="field"><label>Admin WhatsApp number</label><input type="tel" id="ns-wa-number" maxlength="15" placeholder="e.g. 919830000000 (with country code)"></div>
+            <div class="field"><label>Flag employee inactive after (hours)</label><input type="number" id="ns-inactivity-hours" min="1" max="168"></div>
+          </div>
+          <div style="display:flex;flex-wrap:wrap;gap:16px;margin:14px 0 4px;">
+            <label class="checkbox-row" style="margin:0;"><input type="checkbox" id="ns-cat-newlead"> New leads</label>
+            <label class="checkbox-row" style="margin:0;"><input type="checkbox" id="ns-cat-hotlead"> Hot leads</label>
+            <label class="checkbox-row" style="margin:0;"><input type="checkbox" id="ns-cat-overdue"> Overdue follow-ups</label>
+            <label class="checkbox-row" style="margin:0;"><input type="checkbox" id="ns-cat-won"> Deals won</label>
+            <label class="checkbox-row" style="margin:0;"><input type="checkbox" id="ns-cat-lost"> Deals lost</label>
+            <label class="checkbox-row" style="margin:0;"><input type="checkbox" id="ns-cat-inactivity"> Employee inactivity</label>
+          </div>
+          <div class="form-actions" style="margin-top:14px;">
+            <button class="btn btn-primary btn-sm" id="btn-save-notif-settings">Save settings</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="filter-bar">
+        <select id="nf-priority"><option value="">All priority</option><option value="critical">Critical</option><option value="high">High</option><option value="medium">Medium</option><option value="low">Low</option></select>
+        <select id="nf-type"><option value="">All types</option><option value="newLead">New lead</option><option value="hotLead">Hot lead</option><option value="overdue">Overdue follow-up</option><option value="won">Deal won</option><option value="lost">Deal lost</option><option value="inactivity">Employee inactivity</option><option value="dailyReport">Daily report</option></select>
+        <button class="filter-chip" id="nf-reset">Reset</button>
+      </div>
+      <div id="notif-list"></div>
+    </div>
+
+    <!-- ENQUIRY / CUSTOMER DETAIL -->
+    <div class="view hidden" id="view-detail">
+      <button class="btn btn-ghost btn-sm" id="detail-back" style="margin-bottom:14px;">&larr; Back</button>
+      <div class="panel" style="padding:22px 24px;margin-bottom:18px;">
+        <div class="detail-header">
+          <div>
+            <div class="detail-title" id="d-company">—</div>
+            <div class="detail-sub" id="d-sub">—</div>
+          </div>
+          <div id="d-status-badge"></div>
+        </div>
+        <div class="stage-track" id="d-stage-track"></div>
+        <div class="qa-row" id="d-quick-actions"></div>
+        <div class="info-list" id="d-info"></div>
+      </div>
+      <div class="grid-2col">
+        <div class="panel">
+          <div class="panel-head"><h3>Activity &amp; notes feed</h3><button class="btn btn-primary btn-sm" id="btn-add-activity">+ Add activity</button></div>
+          <div class="panel-body pad"><div class="timeline" id="d-timeline"></div></div>
+        </div>
+        <div class="panel">
+          <div class="panel-head"><h3>Enquiry details</h3></div>
+          <div class="panel-body pad" id="d-full-info"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: NEW USER ============ -->
+<div class="modal-overlay" id="modal-user">
+  <div class="modal">
+    <div class="modal-head"><h3 id="user-modal-title">New user</h3><div class="modal-close" data-close>&times;</div></div>
+    <div class="modal-body">
+      <form id="user-form">
+        <div class="form-grid">
+          <div class="field span2"><label>Full name <span class="req">*</span></label><input type="text" id="us-name" placeholder="e.g. Rohit Verma" required></div>
+          <div class="field"><label>Username <span class="req">*</span></label><input type="text" id="us-username" placeholder="e.g. rohit" required autocomplete="off"></div>
+          <div class="field"><label>Password <span class="req">*</span></label><input type="text" id="us-password" placeholder="Set a password" required autocomplete="off"></div>
+          <div class="field span2" id="us-role-field">
+            <label>Role <span class="req">*</span></label>
+            <select id="us-role">
+              <option value="Salesperson">Salesperson</option>
+              <option value="Management">Management</option>
+              <option value="Admin">Admin</option>
+            </select>
+          </div>
+          <div class="field span2" id="us-perm-field">
+            <div class="checkbox-row" style="margin-top:0;">
+              <input type="checkbox" id="us-can-create">
+              <label for="us-can-create" style="margin:0;">Allow this Management user to create new salespeople</label>
+            </div>
+          </div>
+        </div>
+        <div id="user-form-error" class="auth-error hidden" style="margin-top:12px;"></div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" data-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save user</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: RESET PASSWORD ============ -->
+<div class="modal-overlay" id="modal-reset-pw">
+  <div class="modal">
+    <div class="modal-head"><h3>Reset password</h3><div class="modal-close" data-close>&times;</div></div>
+    <div class="modal-body">
+      <p style="margin:0 0 16px;font-size:12.5px;color:var(--ink-muted);">Setting a new password for <strong id="rp-user-name">—</strong> also clears any lockout on their account.</p>
+      <form id="reset-pw-form">
+        <div class="field">
+          <label>New password <span class="req">*</span></label>
+          <input type="text" id="rp-password" placeholder="Set a new password" required autocomplete="off">
+        </div>
+        <div class="checkbox-row" style="margin-bottom:6px;">
+          <input type="checkbox" id="rp-generate">
+          <label for="rp-generate" style="margin:0;">Generate a random password instead</label>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" data-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Set password</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: NEW ENQUIRY ============ -->
+<div class="modal-overlay" id="modal-enquiry">
+  <div class="modal wide">
+    <div class="modal-head"><h3>New enquiry</h3><div class="modal-close" data-close>&times;</div></div>
+    <div class="modal-body">
+      <div class="dup-banner" id="dup-banner">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        <div style="flex:1;">
+          <strong>Existing customer found</strong>
+          <div id="dup-details" style="margin-bottom:8px;"></div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn btn-secondary btn-sm" id="dup-open">Open existing</button>
+            <button class="btn btn-ghost btn-sm" id="dup-dismiss">Create new anyway</button>
+          </div>
+        </div>
+      </div>
+      <form id="enquiry-form">
+        <div class="form-grid">
+          <div class="field"><label>Date of enquiry <span class="req">*</span></label><input type="date" id="fe-date" required></div>
+          <div class="field"><label>Sales person <span class="req">*</span></label><select id="fe-salesperson" required></select></div>
+
+          <div class="field"><label>Customer name <span class="req">*</span></label><input type="text" id="fe-name" placeholder="e.g. Rajesh Sharma" required></div>
+          <div class="field">
+            <label>Designation</label>
+            <select id="fe-designation"><option value="Owner">Owner</option><option value="Purchase Dept">Purchase Dept</option><option value="Plant Head">Plant Head</option><option value="Trader">Trader</option><option value="Store Manager">Store Manager</option><option value="Others">Others – Please Specify</option></select>
+            <input type="text" id="fe-designation-other" placeholder="Please specify designation" style="margin-top:8px;display:none;">
+          </div>
+
+          <div class="field"><label>Company name <span class="req">*</span></label><input type="text" id="fe-company" placeholder="e.g. ABC Industries Pvt. Ltd." required></div>
+          <div class="field"><label>Current supplier</label><input type="text" id="fe-supplier" placeholder="e.g. ABC Packaging"></div>
+
+          <div class="field">
+            <label>Phone number <span class="req">*</span></label>
+            <input type="tel" id="fe-phone" maxlength="10" placeholder="10-digit number" required>
+            <div id="fe-phone-err" style="color:var(--danger);font-size:11.5px;margin-top:4px;display:none;">Please enter a valid 10-digit phone number.</div>
+          </div>
+          <div class="field">
+            <label>WhatsApp number <span class="req">*</span></label>
+            <input type="tel" id="fe-whatsapp" maxlength="10" placeholder="10-digit number" required>
+            <div class="checkbox-row"><input type="checkbox" id="fe-same-phone"><label for="fe-same-phone" style="margin:0;">Same as phone number</label></div>
+          </div>
+
+          <div class="field"><label>City <span class="req">*</span></label><input type="text" id="fe-city" placeholder="e.g. Kolkata" required></div>
+          <div class="field"><label>Pincode <span class="req">*</span></label><input type="text" id="fe-pincode" maxlength="6" placeholder="6-digit pincode" required></div>
+
+          <div class="field span2">
+            <label>Product <span class="req">*</span> — select all that apply</label>
+            <div class="chip-grid" id="fe-products"></div>
+            <input type="text" id="fe-product-other" placeholder="Please specify product" style="margin-top:8px;display:none;">
+          </div>
+
+          <div class="field">
+            <label>Enquiry quantity <span class="req">*</span></label>
+            <div class="qty-row">
+              <input type="number" id="fe-qty" min="0" placeholder="500" required>
+              <select id="fe-unit"><option>Pcs</option><option>Kgs</option><option>Box</option></select>
+            </div>
+          </div>
+          <div class="field"><label>Enquiry type <span class="req">*</span></label><select id="fe-etype"><option>Retail</option><option>Corporate</option><option>Wholesale</option></select></div>
+
+          <div class="field span2">
+            <label>Status <span class="req">*</span></label>
+            <div class="status-pick" id="fe-status-pick">
+              <div class="status-opt hot checked" data-val="hot">🟢 HOT</div>
+              <div class="status-opt medium" data-val="medium">🟡 MEDIUM</div>
+              <div class="status-opt cold" data-val="cold">🔵 COLD</div>
+            </div>
+          </div>
+
+          <div class="field">
+            <label>Sourced from <span class="req">*</span></label>
+            <select id="fe-source"><option>IndiaMART</option><option>Trade Fair</option><option>Naukri</option><option>Cold Call</option><option>Data Base</option><option>LinkedIn</option><option value="Others">Others – Please Specify</option></select>
+            <input type="text" id="fe-source-other" placeholder="Please specify source" style="margin-top:8px;display:none;">
+          </div>
+          <div class="field"><label>Next follow-up date <span class="req">*</span></label><input type="date" id="fe-followup" required></div>
+
+          <div class="field span2"><label>First activity / notes</label><textarea id="fe-notes" placeholder="e.g. Customer requires Air Bubble Film approx. 500 Kgs/month. Asked for quotation."></textarea></div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" data-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save enquiry</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: ADD ACTIVITY ============ -->
+<div class="modal-overlay" id="modal-activity">
+  <div class="modal">
+    <div class="modal-head"><h3>Add activity</h3><div class="modal-close" data-close>&times;</div></div>
+    <div class="modal-body">
+      <form id="activity-form">
+        <div class="form-grid">
+          <div class="field"><label>Activity type</label><select id="ac-type"><option>Call Client</option><option>Send Quotation</option><option>Send Sample</option><option>Schedule Visit</option><option>Negotiation</option><option>Other</option></select></div>
+          <div class="field"><label>Logged by</label><input type="text" id="ac-user" disabled></div>
+          <div class="field"><label>Date</label><input type="date" id="ac-date" required></div>
+          <div class="field"><label>Time</label><input type="time" id="ac-time" required></div>
+          <div class="field span2"><label>Notes</label><textarea id="ac-notes" placeholder="What happened on this interaction?" required></textarea></div>
+          <div class="field span2"><label>Next follow-up (optional)</label><input type="date" id="ac-followup"></div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" data-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Save activity</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: WON ============ -->
+<div class="modal-overlay" id="modal-won">
+  <div class="modal">
+    <div class="modal-head"><h3>Mark as won</h3><div class="modal-close" data-close>&times;</div></div>
+    <div class="modal-body">
+      <form id="won-form">
+        <div class="form-grid">
+          <div class="field"><label>Order date</label><input type="date" id="wn-date" required></div>
+          <div class="field"><label>Order value (₹)</label><input type="number" id="wn-value" min="0" placeholder="e.g. 85000" required></div>
+          <div class="field"><label>PO number</label><input type="text" id="wn-po"></div>
+          <div class="field"><label>Invoice number</label><input type="text" id="wn-inv"></div>
+          <div class="field span2"><label>Payment terms</label><input type="text" id="wn-terms" placeholder="e.g. 30 days credit"></div>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" data-close>Cancel</button>
+          <button type="submit" class="btn btn-primary">Confirm won</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- ============ MODAL: LOST ============ -->
+<div class="modal-overlay" id="modal-lost">
+  <div class="modal">
+    <div class="modal-head"><h3>Mark as lost</h3><div class="modal-close" data-close>&times;</div></div>
+    <div class="modal-body">
+      <form id="lost-form">
+        <div class="field">
+          <label>Reason</label>
+          <select id="ls-reason"><option>Price</option><option>Competitor</option><option>No Requirement</option><option>Requirement Postponed</option><option>Customer Not Responding</option><option>Quality</option><option>Payment Terms</option><option>Wrong Lead</option><option value="Other">Other</option></select>
+          <input type="text" id="ls-other" placeholder="Please specify" style="margin-top:8px;display:none;">
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-secondary" data-close>Cancel</button>
+          <button type="submit" class="btn btn-danger">Confirm lost</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toast-wrap"></div>
+
+<script>
+(function(){
+"use strict";
+
+/* ============================================================
+   CONSTANTS
+=============================================================== */
+const PRODUCTS = ["Air Bubble","Stretch Film","EP Foam","BOPP Cello Tape","DT Thermal Label","Air Bubble/EP Foam Pouch","Cable Tie","Courier Bag"];
+const SOURCES = ["IndiaMART","Trade Fair","Naukri","Cold Call","Data Base","LinkedIn"];
+const STAGES = ["New Enquiry","Contacted","Requirement Confirmed","Quotation","Sample","Visit","Negotiation","Order"];
+const STORE_KEY = "pulvick_crm_v2";
+const THEME_KEY = "pulvick_crm_theme";
+const LOGO_DATA_URI = "data:image/png;base64,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";
+
+function uid(){ return Math.random().toString(36).slice(2,10) + Date.now().toString(36).slice(-4); }
+document.getElementById("logo-img-login").src = LOGO_DATA_URI;
+document.getElementById("logo-img-sidebar").src = LOGO_DATA_URI;
+function pad(n){ return n<10 ? "0"+n : ""+n; }
+function todayISO(){ const d=new Date(); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+function fmtDate(iso){ if(!iso) return "—"; const [y,m,d]=iso.split("-"); return `${d}/${m}/${y}`; }
+function fmtDateLong(iso){ if(!iso) return "—"; const d=new Date(iso+"T00:00:00"); const months=["January","February","March","April","May","June","July","August","September","October","November","December"]; return `${d.getDate()} ${months[d.getMonth()]} ${d.getFullYear()}`; }
+function fmtTime(t){ if(!t) return ""; let [h,m]=t.split(":").map(Number); const ap = h>=12 ? "PM":"AM"; h = h%12; if(h===0) h=12; return `${h}:${pad(m)} ${ap}`; }
+function daysDiff(iso){ const a=new Date(iso+"T00:00:00"), b=new Date(todayISO()+"T00:00:00"); return Math.round((a-b)/86400000); }
+function initials(name){ return (name||"?").trim().split(/\s+/).map(s=>s[0]).slice(0,2).join("").toUpperCase(); }
+function esc(s){ return (s==null?"":String(s)).replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c])); }
+function toast(msg){
+  const wrap = document.getElementById("toast-wrap");
+  const t = document.createElement("div"); t.className="toast"; t.textContent = msg;
+  wrap.appendChild(t); setTimeout(()=>t.remove(), 3200);
+}
+
+/* ============================================================
+   STATE / PERSISTENCE
+=============================================================== */
+let DB = null;
+let currentUser = null;
+let currentDetailId = null;
+let selectedProducts = [];
+let selectedStatus = "hot";
+let dupMatch = null;
+
+function loadDB(){
+  try{
+    const raw = localStorage.getItem(STORE_KEY);
+    if(raw){
+      const parsed = JSON.parse(raw);
+      if(parsed && Array.isArray(parsed.users) && parsed.users.length && Array.isArray(parsed.enquiries)){
+        DB = parsed;
+        // migrate: ensure every user has lockout fields even if saved by an earlier version
+        DB.users.forEach(u=>{
+          if(typeof u.failedAttempts !== "number") u.failedAttempts = 0;
+          if(typeof u.locked !== "boolean") u.locked = false;
+        });
+        if(!DB.settings){
+          DB.settings = { adminWhatsApp:"919830000000", inactivityHours:24, notifyNewLead:true, notifyHotLead:true, notifyOverdue:true, notifyWon:true, notifyLost:true, notifyInactivity:true };
+        }
+        if(!Array.isArray(DB.notifications)) DB.notifications = [];
+        return;
+      }
+    }
+  }catch(e){ console.warn("storage read failed", e); }
+  DB = seedData();
+  saveDB();
+}
+function saveDB(){
+  try{ localStorage.setItem(STORE_KEY, JSON.stringify(DB)); }
+  catch(e){ console.warn("storage write failed", e); toast("Could not save — storage unavailable"); }
+}
+
+function seedData(){
+  // ---- Users: Admin at the root, Management created by Admin, Salespeople
+  // created either directly by Admin or by a Management user (2-level hierarchy). ----
+  const adminId = uid();
+  const mgmtId = uid();
+  const users = [
+    { id: adminId, username:"admin", password:"pulkit@admin1", name:"Admin", role:"Admin", createdBy:null, canCreateUsers:true, active:true, failedAttempts:0, locked:false },
+    { id: mgmtId, username:"meera", password:"meera@manage1", name:"Meera Shah", role:"Management", createdBy:adminId, canCreateUsers:true, active:true, failedAttempts:0, locked:false },
+    { id: uid(), username:"pulkit", password:"pulkit@123", name:"Pulkit", role:"Salesperson", createdBy:adminId, canCreateUsers:false, active:true, failedAttempts:0, locked:false },
+    { id: uid(), username:"sangita", password:"sangita@123", name:"Sangita", role:"Salesperson", createdBy:adminId, canCreateUsers:false, active:true, failedAttempts:0, locked:false },
+    { id: uid(), username:"bikram", password:"bikram@123", name:"Bikram", role:"Salesperson", createdBy:mgmtId, canCreateUsers:false, active:true, failedAttempts:0, locked:false },
+    { id: uid(), username:"samudra", password:"samudra@123", name:"Samudra", role:"Salesperson", createdBy:mgmtId, canCreateUsers:false, active:true, failedAttempts:0, locked:false },
+  ];
+  function mkEnq(o){
+    return Object.assign({
+      id: uid(), designation:"Owner", designationOther:"", supplier:"", productOther:"",
+      sourceOther:"", stage:"open", wonDetails:null, lostDetails:null, activities: [], createdAt: new Date().toISOString()
+    }, o);
+  }
+  const T = todayISO();
+  function offset(days){ const d=new Date(); d.setDate(d.getDate()+days); return d.getFullYear()+"-"+pad(d.getMonth()+1)+"-"+pad(d.getDate()); }
+
+  const enquiries = [
+    mkEnq({date:offset(-6), name:"Rajesh Sharma", company:"ABC Industries Pvt. Ltd.", phone:"9830012345", whatsapp:"9830012345", city:"Kolkata", pincode:"700001", salesperson:"Pulkit", products:["Air Bubble","Stretch Film"], qty:500, unit:"Kgs", etype:"Corporate", status:"hot", source:"IndiaMART", followup:offset(0), supplier:"Local Vendor",
+      activities:[
+        {id:uid(), type:"Call Client", date:offset(-6), time:"16:20", user:"Pulkit", notes:"Customer requires Air Bubble Film approximately 500 Kgs/month. Asked for quotation.", nextFollowup:offset(-3), createdAt:offset(-6)},
+        {id:uid(), type:"Send Quotation", date:offset(-3), time:"11:15", user:"Pulkit", notes:"Quotation sent through WhatsApp.", nextFollowup:offset(0), createdAt:offset(-3)}
+      ]}),
+    mkEnq({date:offset(-10), name:"Meena Patel", company:"Patel Traders", phone:"9123456780", whatsapp:"9123456780", city:"Ahmedabad", pincode:"380001", salesperson:"Bikram", products:["BOPP Cello Tape","Courier Bag"], qty:1200, unit:"Pcs", etype:"Wholesale", status:"medium", source:"Trade Fair", followup:offset(-2), supplier:"",
+      activities:[
+        {id:uid(), type:"Call Client", date:offset(-10), time:"10:00", user:"Bikram", notes:"Met at trade fair, interested in tape and courier bags for e-commerce packing.", nextFollowup:offset(-2), createdAt:offset(-10)}
+      ]}),
+    mkEnq({date:offset(-2), name:"Suresh Iyer", company:"Iyer Exports", phone:"9988776655", whatsapp:"9988776655", city:"Chennai", pincode:"600001", salesperson:"Sangita", products:["EP Foam","Air Bubble/EP Foam Pouch"], qty:300, unit:"Kgs", etype:"Corporate", status:"hot", source:"Cold Call", followup:offset(0), supplier:"XYZ Foam Co.",
+      activities:[
+        {id:uid(), type:"Call Client", date:offset(-2), time:"14:00", user:"Sangita", notes:"Needs foam packaging for glass export items. Price sensitive, comparing suppliers.", nextFollowup:offset(0), createdAt:offset(-2)}
+      ]}),
+    mkEnq({date:offset(-15), name:"Anita Rao", company:"Rao Logistics", phone:"9012345678", whatsapp:"9012345678", city:"Bengaluru", pincode:"560001", salesperson:"Samudra", products:["Stretch Film"], qty:2, unit:"Box", etype:"Corporate", status:"cold", source:"LinkedIn", followup:offset(6), supplier:"Existing local supplier",
+      activities:[
+        {id:uid(), type:"Call Client", date:offset(-15), time:"12:30", user:"Samudra", notes:"Currently happy with existing supplier, revisit in a few weeks.", nextFollowup:offset(6), createdAt:offset(-15)}
+      ]}),
+    mkEnq({date:offset(-20), name:"Vikram Nair", company:"Nair Packaging Solutions", phone:"9765432109", whatsapp:"9765432109", city:"Kochi", pincode:"682001", salesperson:"Pulkit", products:["DT Thermal Label","Cable Tie"], qty:5000, unit:"Pcs", etype:"Retail", status:"hot", source:"Data Base", followup:offset(1), supplier:"",
+      activities:[
+        {id:uid(), type:"Call Client", date:offset(-20), time:"09:45", user:"Pulkit", notes:"Regular buyer of thermal labels, wants to add cable ties this quarter.", nextFollowup:offset(-12), createdAt:offset(-20)},
+        {id:uid(), type:"Send Sample", date:offset(-12), time:"15:00", user:"Pulkit", notes:"Sample dispatched for approval.", nextFollowup:offset(-5), createdAt:offset(-12)},
+        {id:uid(), type:"Schedule Visit", date:offset(-5), time:"11:00", user:"Pulkit", notes:"Factory visit done, discussed pricing for bulk order.", nextFollowup:offset(1), createdAt:offset(-5)}
+      ]}),
+    mkEnq({date:offset(-30), name:"Kavita Desai", company:"Desai & Sons", phone:"9345612780", whatsapp:"9345612780", city:"Pune", pincode:"411001", salesperson:"Bikram", products:["Air Bubble"], qty:800, unit:"Kgs", etype:"Corporate", status:"hot", source:"IndiaMART", followup:offset(-25), supplier:"", stage:"won",
+      wonDetails:{date:offset(-24), value:92000, po:"PO-2291", invoice:"INV-5541", terms:"30 days credit"},
+      activities:[
+        {id:uid(), type:"Call Client", date:offset(-30), time:"10:00", user:"Bikram", notes:"Bulk enquiry for air bubble film, urgent requirement.", nextFollowup:offset(-27), createdAt:offset(-30)},
+        {id:uid(), type:"Send Quotation", date:offset(-27), time:"12:00", user:"Bikram", notes:"Quotation sent and approved quickly.", nextFollowup:offset(-24), createdAt:offset(-27)}
+      ]}),
+    mkEnq({date:offset(-18), name:"Farhan Sheikh", company:"Sheikh Traders", phone:"9871234560", whatsapp:"9871234560", city:"Lucknow", pincode:"226001", salesperson:"Samudra", products:["Courier Bag","BOPP Cello Tape"], qty:3000, unit:"Pcs", etype:"Wholesale", status:"medium", source:"Naukri", followup:offset(-14), supplier:"", stage:"lost",
+      lostDetails:{reason:"Price"},
+      activities:[
+        {id:uid(), type:"Call Client", date:offset(-18), time:"11:00", user:"Samudra", notes:"Compared pricing with two other vendors.", nextFollowup:offset(-14), createdAt:offset(-18)},
+        {id:uid(), type:"Other", date:offset(-14), time:"16:00", user:"Samudra", notes:"Went with a cheaper competitor. Marked as lost on price.", nextFollowup:"", createdAt:offset(-14)}
+      ]}),
+    mkEnq({date:T, name:"Ritu Banerjee", company:"Banerjee Enterprises", phone:"9007654321", whatsapp:"9007654321", city:"Kolkata", pincode:"700016", salesperson:"Pulkit", products:["Air Bubble","EP Foam"], qty:150, unit:"Kgs", etype:"Retail", status:"medium", source:"Cold Call", followup:offset(2), supplier:"",
+      activities:[
+        {id:uid(), type:"Call Client", date:T, time:"09:30", user:"Pulkit", notes:"First-time enquiry, small quantity but recurring potential monthly.", nextFollowup:offset(2), createdAt:T}
+      ]}),
+  ];
+
+  const eByCompany = (name) => enquiries.find(e=>e.company===name);
+  const hotLead = eByCompany("ABC Industries Pvt. Ltd.");
+  const overdueLead = eByCompany("Patel Traders");
+  const wonLead = eByCompany("Desai & Sons");
+  const lostLead = eByCompany("Sheikh Traders");
+
+  const settings = {
+    adminWhatsApp: "919830000000",
+    inactivityHours: 24,
+    notifyNewLead: true, notifyHotLead: true, notifyOverdue: true,
+    notifyWon: true, notifyLost: true, notifyInactivity: true,
+  };
+
+  const notifications = [
+    { id: uid(), type:"hotLead", priority:"high", title:"🔥 Hot lead alert",
+      message:`${hotLead.name} at ${hotLead.company} has shown strong buying intent.`,
+      waMessage:`🔥 Hot Lead Alert\n${hotLead.name} — ${hotLead.company}\nProduct: ${hotLead.products.join(", ")}\nSalesperson: ${hotLead.salesperson}\nAction recommended: Immediate follow-up.`,
+      enquiryId: hotLead.id, dedupeKey:`hot-${hotLead.id}`, createdAt:new Date(Date.now()-3600e3).toISOString(), read:false },
+    { id: uid(), type:"overdue", priority:"critical", title:"⚠️ Follow-up overdue",
+      message:`${overdueLead.name} at ${overdueLead.company} — follow-up is 2 days overdue.`,
+      waMessage:`⚠️ Follow-Up Overdue\nSalesperson: ${overdueLead.salesperson}\nCustomer: ${overdueLead.name} — ${overdueLead.company}\nWas due: ${fmtDate(overdueLead.followup)}\nStatus: Not completed`,
+      enquiryId: overdueLead.id, dedupeKey:`overdue-${overdueLead.id}-${overdueLead.followup}`, createdAt:new Date(Date.now()-7200e3).toISOString(), read:false },
+    { id: uid(), type:"won", priority:"high", title:"Client acquired",
+      message:`${wonLead.company} converted — order value ₹${wonLead.wonDetails.value.toLocaleString("en-IN")}.`,
+      waMessage:`✅ Client Acquired\nCustomer: ${wonLead.company}\nSalesperson: ${wonLead.salesperson}\nProduct: ${wonLead.products.join(", ")}\nDeal Value: ₹${wonLead.wonDetails.value.toLocaleString("en-IN")}\nAcquisition Date: ${fmtDate(wonLead.wonDetails.date)}`,
+      enquiryId: wonLead.id, dedupeKey:`won-${wonLead.id}`, createdAt:new Date(Date.now()-86400e3).toISOString(), read:true },
+    { id: uid(), type:"lost", priority:"medium", title:"Lead lost",
+      message:`${lostLead.company} marked as lost — ${lostLead.lostDetails.reason}.`,
+      waMessage:`Lead Lost\nCustomer: ${lostLead.company}\nSalesperson: ${lostLead.salesperson}\nReason: ${lostLead.lostDetails.reason}`,
+      enquiryId: lostLead.id, dedupeKey:`lost-${lostLead.id}`, createdAt:new Date(Date.now()-172800e3).toISOString(), read:true },
+  ];
+
+  return { users, enquiries, settings, notifications };
+}
+
+/* ============================================================
+   DERIVED HELPERS
+=============================================================== */
+function visibleEnquiries(){
+  if(currentUser.role === "Salesperson"){
+    return DB.enquiries.filter(e => e.salesperson === currentUser.name);
+  }
+  return DB.enquiries;
+}
+function statusEmoji(s){ return s==="hot" ? "🟢" : s==="medium" ? "🟡" : "🔵"; }
+function statusLabel(s){ return s==="hot"?"Hot":s==="medium"?"Medium":"Cold"; }
+
+/* ---- user/hierarchy helpers ---- */
+function activeSalespeopleNames(){
+  return DB.users.filter(u=>u.role==="Salesperson" && u.active).map(u=>u.name);
+}
+function findUserById(id){ return DB.users.find(u=>u.id===id); }
+function findUserByUsername(uname){ return DB.users.find(u=>u.username.toLowerCase()===String(uname).toLowerCase()); }
+function adminUser(){ return DB.users.find(u=>u.role==="Admin"); }
+function directReports(userId){ return DB.users.filter(u=>u.createdBy===userId); }
+function isNameTakenAsSalesperson(name){
+  // enquiries store salesperson by name string; keep names unique among active salespeople
+  return DB.users.some(u=>u.role==="Salesperson" && u.active && u.name.toLowerCase()===name.toLowerCase());
+}
+
+/* ============================================================
+   LOGIN  (username + password against DB.users)
+=============================================================== */
+document.getElementById("login-btn").addEventListener("click", doLogin);
+document.getElementById("login-password").addEventListener("keydown", e=>{ if(e.key==="Enter") doLogin(); });
+document.getElementById("login-username").addEventListener("keydown", e=>{ if(e.key==="Enter") doLogin(); });
+
+const MAX_LOGIN_ATTEMPTS = 5;
+function doLogin(){
+  const uname = document.getElementById("login-username").value.trim();
+  const pass = document.getElementById("login-password").value;
+  const errBox = document.getElementById("login-error");
+  if(!uname || !pass){ errBox.textContent = "Enter both username and password."; errBox.classList.remove("hidden"); return; }
+  const u = findUserByUsername(uname);
+
+  if(!u){
+    errBox.textContent = "Incorrect username or password.";
+    errBox.classList.remove("hidden");
+    return;
+  }
+  if(!u.active){
+    errBox.textContent = "This account is inactive. Contact your Admin.";
+    errBox.classList.remove("hidden");
+    return;
+  }
+  if(u.locked){
+    errBox.textContent = "This account is locked after too many failed attempts. Ask your Admin to unlock it.";
+    errBox.classList.remove("hidden");
+    return;
+  }
+  if(u.password !== pass){
+    u.failedAttempts = (u.failedAttempts||0) + 1;
+    if(u.failedAttempts >= MAX_LOGIN_ATTEMPTS){
+      u.locked = true;
+      errBox.textContent = "Too many failed attempts. This account is now locked — ask your Admin to unlock it.";
+    } else {
+      const left = MAX_LOGIN_ATTEMPTS - u.failedAttempts;
+      errBox.textContent = `Incorrect username or password. ${left} attempt${left===1?"":"s"} left before this account locks.`;
+    }
+    saveDB();
+    errBox.classList.remove("hidden");
+    return;
+  }
+
+  u.failedAttempts = 0;
+  saveDB();
+  errBox.classList.add("hidden");
+  currentUser = { id:u.id, username:u.username, name:u.name, role:u.role };
+  document.getElementById("login-screen").style.display = "none";
+  document.getElementById("app").classList.add("active");
+  document.getElementById("avatar-initials").textContent = initials(u.name);
+  document.getElementById("chip-name").textContent = u.name;
+  document.getElementById("chip-role").textContent = u.role;
+  document.getElementById("login-password").value = "";
+  initApp();
+}
+document.getElementById("logout-btn").addEventListener("click", ()=>{
+  currentUser = null;
+  if(notifPollHandle){ clearInterval(notifPollHandle); notifPollHandle = null; }
+  document.getElementById("app").classList.remove("active");
+  document.getElementById("login-screen").style.display = "flex";
+  document.getElementById("login-username").value = "";
+  document.getElementById("login-error").classList.add("hidden");
+});
+
+/* ============================================================
+   THEME
+=============================================================== */
+(function initTheme(){
+  const saved = localStorage.getItem(THEME_KEY);
+  if(saved) document.documentElement.setAttribute("data-theme", saved);
+})();
+document.getElementById("theme-toggle").addEventListener("click", ()=>{
+  const cur = document.documentElement.getAttribute("data-theme");
+  const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+  const curEffective = cur || (prefersDark ? "dark":"light");
+  const next = curEffective === "dark" ? "light" : "dark";
+  document.documentElement.setAttribute("data-theme", next);
+  try{ localStorage.setItem(THEME_KEY, next); }catch(e){}
+});
+
+/* ============================================================
+   NAVIGATION
+=============================================================== */
+const VIEWS = ["dashboard","enquiries","customers","followups","reports","users","notifications","accounting","detail"];
+function showView(name){
+  if(name==="users" && currentUser.role==="Salesperson") name = "dashboard";
+  if(name==="notifications" && currentUser.role!=="Admin") name = "dashboard";
+  if(name==="accounting" && currentUser.role!=="Admin") name = "dashboard";
+  VIEWS.forEach(v=>{
+    document.getElementById("view-"+v).classList.toggle("hidden", v!==name);
+  });
+  document.querySelectorAll(".nav-item[data-view]").forEach(n=> n.classList.toggle("active", n.dataset.view===name));
+  const titles = {dashboard:"Dashboard", enquiries:"Enquiries", customers:"Customers", followups:"Follow-ups", reports:"Reports", users:"Users", notifications:"WhatsApp alerts", accounting:"Accounting", detail:"Enquiry detail"};
+  document.getElementById("topbar-title").textContent = titles[name] || "";
+  if(name==="dashboard") renderDashboard();
+  if(name==="enquiries") renderEnquiryList();
+  if(name==="customers") renderCustomers();
+  if(name==="followups") renderFollowups();
+  if(name==="reports") renderReports();
+  if(name==="users") renderUsersView();
+  if(name==="notifications") renderNotifications();
+}
+document.getElementById("sidebar-nav").addEventListener("click", e=>{
+  const item = e.target.closest(".nav-item[data-view]"); if(!item) return;
+  showView(item.dataset.view);
+});
+document.getElementById("detail-back").addEventListener("click", ()=> showView("enquiries"));
+document.getElementById("bell-toggle").addEventListener("click", ()=> showView("notifications"));
+
+/* ============================================================
+   INIT APP (after login)
+=============================================================== */
+let notifPollHandle = null;
+function initApp(){
+  populateStaticSelects();
+  renderNavCounts();
+  // Users nav item: Admin and Management only
+  const showUsersNav = currentUser.role !== "Salesperson";
+  document.getElementById("nav-item-users").classList.toggle("hidden", !showUsersNav);
+  document.getElementById("nav-admin-sep").classList.toggle("hidden", !showUsersNav);
+  document.getElementById("nav-admin-label").classList.toggle("hidden", !showUsersNav);
+  // WhatsApp alerts + Accounting: Admin only
+  const isAdmin = currentUser.role === "Admin";
+  document.getElementById("nav-item-notifications").classList.toggle("hidden", !isAdmin);
+  document.getElementById("nav-item-accounting").classList.toggle("hidden", !isAdmin);
+  document.getElementById("bell-toggle").classList.toggle("hidden", !isAdmin);
+  if(isAdmin){
+    refreshNotifications();
+    if(notifPollHandle) clearInterval(notifPollHandle);
+    notifPollHandle = setInterval(refreshNotifications, 60000);
+  }
+  showView("dashboard");
+}
+function populateStaticSelects(){
+  // salesperson selects
+  const spSelects = [document.getElementById("fe-salesperson"), document.getElementById("f-salesperson")];
+  spSelects.forEach(sel=>{
+    const keepFirst = sel.id==="f-salesperson";
+    sel.innerHTML = (keepFirst ? '<option value="">All salespeople</option>' : '') +
+      activeSalespeopleNames().map(s=>`<option value="${esc(s)}">${esc(s)}</option>`).join("");
+  });
+  if(currentUser.role === "Salesperson"){
+    document.getElementById("fe-salesperson").value = currentUser.name;
+  }
+  // source filter
+  const fSource = document.getElementById("f-source");
+  fSource.innerHTML = '<option value="">All sources</option>' + SOURCES.map(s=>`<option>${esc(s)}</option>`).join("");
+  // product chips
+  const chipWrap = document.getElementById("fe-products");
+  chipWrap.innerHTML = PRODUCTS.map(p=>`
+    <label class="chip-check" data-val="${esc(p)}">
+      <input type="checkbox" value="${esc(p)}"> ${esc(p)}
+    </label>`).join("") + `<label class="chip-check" data-val="Others"><input type="checkbox" value="Others"> Others – Specify</label>`;
+}
+function renderNavCounts(){
+  document.getElementById("nav-count-enq").textContent = visibleEnquiries().length;
+  const fu = visibleEnquiries().filter(e=> e.stage==="open" && e.followup && daysDiff(e.followup) <= 0).length;
+  document.getElementById("nav-count-fu").textContent = fu;
+  if(currentUser.role === "Admin"){
+    const unread = DB.notifications.filter(n=>!n.read).length;
+    document.getElementById("nav-count-notif").textContent = unread;
+    const bellBadge = document.getElementById("bell-badge");
+    bellBadge.textContent = unread > 9 ? "9+" : unread;
+    bellBadge.classList.toggle("hidden", unread===0);
+  }
+}
+
+/* ============================================================
+   DASHBOARD
+=============================================================== */
+function renderDashboard(){
+  document.getElementById("dash-greeting").textContent = `Good day, ${currentUser.name}`;
+  const list = visibleEnquiries();
+  const hot = list.filter(e=>e.status==="hot" && e.stage==="open").length;
+  const med = list.filter(e=>e.status==="medium" && e.stage==="open").length;
+  const cold = list.filter(e=>e.status==="cold" && e.stage==="open").length;
+  const fuToday = list.filter(e=> e.stage==="open" && e.followup && daysDiff(e.followup)===0).length;
+  const overdue = list.filter(e=> e.stage==="open" && e.followup && daysDiff(e.followup) < 0).length;
+  const quoted = list.filter(e=> e.activities.some(a=>a.type==="Send Quotation")).length;
+  const won = list.filter(e=>e.stage==="won").length;
+
+  const kpis = [
+    {label:"Total enquiries", val:list.length, cls:""},
+    {label:"Hot leads", val:hot, cls:"hot"},
+    {label:"Medium leads", val:med, cls:"medium"},
+    {label:"Cold leads", val:cold, cls:"cold"},
+    {label:"Follow-ups today", val:fuToday, cls:""},
+    {label:"Overdue", val:overdue, cls:"overdue"},
+    {label:"Quotations sent", val:quoted, cls:""},
+    {label:"Won", val:won, cls:""},
+  ];
+  document.getElementById("kpi-strip").innerHTML = kpis.map(k=>`
+    <div class="kpi ${k.cls}"><div class="val">${k.val}</div><div class="lbl">${k.label}</div></div>
+  `).join("");
+
+  // salesperson table (admin/mgmt) else just self
+  const sps = currentUser.role === "Salesperson" ? [currentUser.name] : activeSalespeopleNames();
+  let rows = sps.map(sp=>{
+    const mine = DB.enquiries.filter(e=>e.salesperson===sp);
+    const h = mine.filter(e=>e.status==="hot"&&e.stage==="open").length;
+    const m = mine.filter(e=>e.status==="medium"&&e.stage==="open").length;
+    const c = mine.filter(e=>e.status==="cold"&&e.stage==="open").length;
+    const fu = mine.filter(e=>e.stage==="open"&&e.followup&&daysDiff(e.followup)<=0).length;
+    const w = mine.filter(e=>e.stage==="won").length;
+    return `<tr><td><strong>${esc(sp)}</strong></td><td class="num">${mine.length}</td><td class="num">${h}</td><td class="num">${m}</td><td class="num">${c}</td><td class="num">${fu}</td><td class="num">${w}</td></tr>`;
+  }).join("");
+  document.getElementById("sp-table").innerHTML = `
+    <thead><tr><th>Salesperson</th><th>Enq</th><th>Hot</th><th>Med</th><th>Cold</th><th>Follow-ups</th><th>Won</th></tr></thead>
+    <tbody>${rows || '<tr><td colspan="7" class="empty-hint">No data</td></tr>'}</tbody>`;
+
+  const todays = list.filter(e=>e.stage==="open" && e.followup && daysDiff(e.followup)===0);
+  document.getElementById("dash-fu-count").textContent = todays.length;
+  document.getElementById("dash-fu-list").innerHTML = todays.length ? todays.map(e=>`
+    <div style="display:flex;align-items:center;justify-content:space-between;padding:9px 0;border-bottom:1px solid var(--border);cursor:pointer;" onclick="openDetail('${e.id}')">
+      <div>
+        <div style="font-weight:600;font-size:12.5px;">${esc(e.company)}</div>
+        <div style="font-size:11.5px;color:var(--ink-muted);">${esc(e.name)} · ${esc(e.salesperson)}</div>
+      </div>
+      <span class="badge ${e.status}"><span class="dot"></span>${statusLabel(e.status)}</span>
+    </div>`).join("") : '<div class="empty-hint">Nothing scheduled today.</div>';
+
+  document.getElementById("dash-hier-tree").innerHTML = renderHierarchyTreeHTML();
+}
+
+/* ============================================================
+   HIERARCHY TREE  (root Admin -> level 1 -> level 2)
+=============================================================== */
+function hierNodeHTML(u){
+  const meCls = (currentUser && u.id===currentUser.id) ? "me" : "";
+  return `<div class="hier-node ${meCls}">
+    <div class="hn-avatar">${esc(initials(u.name))}</div>
+    <div><div class="hn-name">${esc(u.name)}${!u.active ? ' <span style="color:var(--danger);font-weight:600;">(inactive)</span>':''}</div><div class="hn-role">${esc(u.role)}${u.role==="Management" ? (u.canCreateUsers ? " · can create users" : " · create disabled") : ""}</div></div>
+  </div>`;
+}
+function renderHierarchyTreeHTML(){
+  const root = adminUser();
+  if(!root) return '<div class="empty-hint">No admin found.</div>';
+  const level1 = directReports(root.id);
+  let html = hierNodeHTML(root);
+  if(level1.length){
+    html += `<div class="hier-children">` + level1.map(u1=>{
+      let node = hierNodeHTML(u1);
+      const level2 = directReports(u1.id);
+      if(level2.length){
+        node += `<div class="hier-l2">` + level2.map(hierNodeHTML).join("") + `</div>`;
+      }
+      return node;
+    }).join("") + `</div>`;
+  } else {
+    html += `<div class="hier-children"><div class="empty-hint" style="text-align:left;padding:8px 0;">No one reports to Admin yet.</div></div>`;
+  }
+  return html;
+}
+
+/* ============================================================
+   ENQUIRY LIST
+=============================================================== */
+function getFilters(){
+  return {
+    status: document.getElementById("f-status").value,
+    salesperson: document.getElementById("f-salesperson").value,
+    source: document.getElementById("f-source").value,
+    etype: document.getElementById("f-type").value,
+    stage: document.getElementById("f-stage").value,
+    q: document.getElementById("global-search").value.trim().toLowerCase(),
+  };
+}
+function applyFilters(list){
+  const f = getFilters();
+  return list.filter(e=>{
+    if(f.status && e.status!==f.status) return false;
+    if(f.salesperson && e.salesperson!==f.salesperson) return false;
+    if(f.source && e.source!==f.source) return false;
+    if(f.etype && e.etype!==f.etype) return false;
+    if(f.stage && e.stage!==f.stage) return false;
+    if(f.q){
+      const hay = [e.name,e.company,e.phone,e.whatsapp,e.city,e.pincode,e.supplier].join(" ").toLowerCase();
+      if(!hay.includes(f.q)) return false;
+    }
+    return true;
+  });
+}
+function renderEnquiryList(){
+  let list = applyFilters(visibleEnquiries()).slice().sort((a,b)=> b.date.localeCompare(a.date));
+  document.getElementById("enq-sub").textContent = `${list.length} enquir${list.length===1?"y":"ies"}`;
+  const rows = list.map(e=>`
+    <tr class="rowclick" onclick="openDetail('${e.id}')">
+      <td>${fmtDate(e.date)}</td>
+      <td><strong>${esc(e.name)}</strong></td>
+      <td>${esc(e.company)}</td>
+      <td>${esc(e.phone)}</td>
+      <td>${esc(e.city)}</td>
+      <td>${e.products.map(p=>`<span class="tag">${esc(p)}</span>`).join(" ")}</td>
+      <td class="num">${e.qty} ${esc(e.unit)}</td>
+      <td>${esc(e.salesperson)}</td>
+      <td>${esc(e.etype)}</td>
+      <td>${e.stage==="won" ? '<span class="badge won">Won</span>' : e.stage==="lost" ? '<span class="badge lost">Lost</span>' : `<span class="badge ${e.status}"><span class="dot"></span>${statusLabel(e.status)}</span>`}</td>
+      <td>${esc(e.source)}</td>
+      <td>${fmtDate(e.followup)}</td>
+    </tr>`).join("");
+  document.getElementById("enq-table").innerHTML = `
+    <thead><tr><th>Date</th><th>Customer</th><th>Company</th><th>Phone</th><th>City</th><th>Product</th><th>Qty</th><th>Salesperson</th><th>Type</th><th>Status</th><th>Source</th><th>Follow-up</th></tr></thead>
+    <tbody>${rows || '<tr><td colspan="12" class="empty-hint">No enquiries match these filters.</td></tr>'}</tbody>`;
+}
+["f-status","f-salesperson","f-source","f-type","f-stage"].forEach(id=>{
+  document.getElementById(id).addEventListener("change", renderEnquiryList);
+});
+document.getElementById("global-search").addEventListener("input", ()=>{
+  if(!document.getElementById("view-enquiries").classList.contains("hidden")) renderEnquiryList();
+});
+document.getElementById("f-reset").addEventListener("click", ()=>{
+  ["f-status","f-salesperson","f-source","f-type","f-stage"].forEach(id=>document.getElementById(id).value="");
+  document.getElementById("global-search").value="";
+  renderEnquiryList();
+});
+document.getElementById("btn-export-csv").addEventListener("click", ()=>{
+  const list = applyFilters(visibleEnquiries());
+  const headers = ["Date","Customer","Designation","Company","Phone","WhatsApp","City","Pincode","Products","Qty","Unit","Type","Status","Salesperson","Source","Current Supplier","Next Follow-up","Stage"];
+  const rows = list.map(e=>[fmtDate(e.date), e.name, e.designation, e.company, e.phone, e.whatsapp, e.city, e.pincode, e.products.join("; "), e.qty, e.unit, e.etype, statusLabel(e.status), e.salesperson, e.source, e.supplier, fmtDate(e.followup), e.stage]);
+  const csv = [headers, ...rows].map(r=> r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob = new Blob([csv], {type:"text/csv"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = "pulvick_enquiries.csv"; a.click();
+  toast("CSV exported");
+});
+
+/* ============================================================
+   CUSTOMERS (grouped by company)
+=============================================================== */
+function renderCustomers(){
+  const list = visibleEnquiries();
+  const groups = {};
+  list.forEach(e=>{
+    if(!groups[e.company]) groups[e.company] = [];
+    groups[e.company].push(e);
+  });
+  const rows = Object.keys(groups).sort().map(company=>{
+    const items = groups[company];
+    const contacts = [...new Set(items.map(i=>i.name))];
+    const last = items.slice().sort((a,b)=>b.date.localeCompare(a.date))[0];
+    return `<tr class="rowclick" onclick="openDetail('${last.id}')">
+      <td><strong>${esc(company)}</strong></td>
+      <td>${contacts.map(c=>`<span class="tag">${esc(c)}</span>`).join(" ")}</td>
+      <td class="num">${items.length}</td>
+      <td>${esc(last.city)}</td>
+      <td><span class="badge ${last.status}"><span class="dot"></span>${statusLabel(last.status)}</span></td>
+      <td>${esc(last.salesperson)}</td>
+      <td>${fmtDate(last.date)}</td>
+    </tr>`;
+  }).join("");
+  document.getElementById("cust-table").innerHTML = `
+    <thead><tr><th>Company</th><th>Contacts</th><th>Enquiries</th><th>City</th><th>Latest status</th><th>Salesperson</th><th>Last enquiry</th></tr></thead>
+    <tbody>${rows || '<tr><td colspan="7" class="empty-hint">No customers yet.</td></tr>'}</tbody>`;
+}
+
+/* ============================================================
+   FOLLOW-UPS
+=============================================================== */
+function fuCard(e){
+  const dd = daysDiff(e.followup);
+  const cls = dd < 0 ? "overdue" : "";
+  const whenTxt = dd<0 ? `${Math.abs(dd)} day${Math.abs(dd)===1?"":"s"} overdue` : dd===0 ? "Today" : dd===1 ? "Tomorrow" : `In ${dd} days`;
+  return `<div class="fu-card ${e.status} ${cls}">
+    <div class="company">${esc(e.company)}</div>
+    <div class="contact">${esc(e.name)}</div>
+    <div class="meta">${e.products.map(esc).join(", ")}</div>
+    <div class="meta">${esc(e.salesperson)}</div>
+    <div class="when">${dd<0 ? "🔴 " : ""}${whenTxt} · ${fmtDate(e.followup)}</div>
+    <div class="fu-card-actions">
+      <a class="btn btn-secondary btn-sm" href="tel:${esc(e.phone)}">Call</a>
+      <a class="btn btn-secondary btn-sm" href="https://wa.me/91${esc(e.whatsapp)}" target="_blank" rel="noopener">WhatsApp</a>
+      <button class="btn btn-primary btn-sm" onclick="openDetail('${e.id}')">Open</button>
+    </div>
+  </div>`;
+}
+function renderFollowups(){
+  const list = visibleEnquiries().filter(e=>e.stage==="open" && e.followup);
+  const overdue = list.filter(e=>daysDiff(e.followup)<0).sort((a,b)=>a.followup.localeCompare(b.followup));
+  const today = list.filter(e=>daysDiff(e.followup)===0);
+  const upcoming = list.filter(e=>daysDiff(e.followup)>0).sort((a,b)=>a.followup.localeCompare(b.followup));
+  document.getElementById("fu-overdue-n").textContent = overdue.length;
+  document.getElementById("fu-today-n").textContent = today.length;
+  document.getElementById("fu-upcoming-n").textContent = upcoming.length;
+  document.getElementById("fu-overdue").innerHTML = overdue.map(fuCard).join("") || '<div class="empty-state">No overdue follow-ups. Nice work.</div>';
+  document.getElementById("fu-today").innerHTML = today.map(fuCard).join("") || '<div class="empty-state">Nothing due today.</div>';
+  document.getElementById("fu-upcoming").innerHTML = upcoming.slice(0,12).map(fuCard).join("") || '<div class="empty-state">No upcoming follow-ups scheduled.</div>';
+}
+
+/* ============================================================
+   REPORTS
+=============================================================== */
+function barRows(counts, total){
+  const max = Math.max(1, ...Object.values(counts));
+  return Object.entries(counts).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`
+    <div class="bar-row">
+      <div>${esc(k)}</div>
+      <div class="bar-track"><div class="bar-fill" style="width:${(v/max*100).toFixed(0)}%"></div></div>
+      <div class="n">${v}</div>
+    </div>`).join("");
+}
+function renderReports(){
+  const list = visibleEnquiries();
+  const bySource = {}; SOURCES.forEach(s=>bySource[s]=0);
+  list.forEach(e=>{ bySource[e.source] = (bySource[e.source]||0)+1; });
+  document.getElementById("rep-source").innerHTML = barRows(bySource) || '<div class="empty-hint">No data</div>';
+
+  const byProduct = {}; PRODUCTS.forEach(p=>byProduct[p]=0);
+  list.forEach(e=> e.products.forEach(p=>{ byProduct[p] = (byProduct[p]||0)+1; }));
+  document.getElementById("rep-product").innerHTML = barRows(byProduct) || '<div class="empty-hint">No data</div>';
+
+  const sps = currentUser.role === "Salesperson" ? [currentUser.name] : activeSalespeopleNames();
+  const rows = sps.map(sp=>{
+    const mine = DB.enquiries.filter(e=>e.salesperson===sp);
+    const hot = mine.filter(e=>e.status==="hot"&&e.stage==="open").length;
+    const med = mine.filter(e=>e.status==="medium"&&e.stage==="open").length;
+    const cold = mine.filter(e=>e.status==="cold"&&e.stage==="open").length;
+    const followups = mine.filter(e=>e.stage==="open").length;
+    const quotes = mine.filter(e=>e.activities.some(a=>a.type==="Send Quotation")).length;
+    const samples = mine.filter(e=>e.activities.some(a=>a.type==="Send Sample")).length;
+    const visits = mine.filter(e=>e.activities.some(a=>a.type==="Schedule Visit")).length;
+    const won = mine.filter(e=>e.stage==="won").length;
+    const lost = mine.filter(e=>e.stage==="lost").length;
+    return `<tr><td><strong>${esc(sp)}</strong></td><td class="num">${mine.length}</td><td class="num">${hot}</td><td class="num">${med}</td><td class="num">${cold}</td><td class="num">${followups}</td><td class="num">${quotes}</td><td class="num">${samples}</td><td class="num">${visits}</td><td class="num">${won}</td><td class="num">${lost}</td></tr>`;
+  }).join("");
+  document.getElementById("rep-sp-table").innerHTML = `
+    <thead><tr><th>Salesperson</th><th>Total</th><th>Hot</th><th>Med</th><th>Cold</th><th>Follow-ups</th><th>Quotes</th><th>Samples</th><th>Visits</th><th>Won</th><th>Lost</th></tr></thead>
+    <tbody>${rows || '<tr><td colspan="11" class="empty-hint">No data</td></tr>'}</tbody>`;
+}
+
+/* ============================================================
+   WHATSAPP NOTIFICATION ENGINE
+   Generates admin alerts from live CRM state and hands each one
+   off to WhatsApp as a pre-filled wa.me link — no server needed,
+   but also no automatic delivery when this tab is closed.
+=============================================================== */
+function waLink(number, text){
+  const clean = (number||"").replace(/\D/g,"");
+  return `https://wa.me/${clean}?text=${encodeURIComponent(text)}`;
+}
+function pushNotification(n){
+  if(DB.notifications.some(x=>x.dedupeKey===n.dedupeKey)) return; // already sent this exact alert
+  DB.notifications.unshift(Object.assign({ id:uid(), createdAt:new Date().toISOString(), read:false }, n));
+  saveDB();
+}
+function lastActivityAt(e){
+  if(!e.activities.length) return new Date(e.date+"T00:00:00").getTime();
+  const latest = e.activities.slice().sort((a,b)=> (b.createdAt||b.date).localeCompare(a.createdAt||a.date))[0];
+  return new Date(latest.createdAt || (latest.date+"T00:00:00")).getTime();
+}
+function refreshNotifications(){
+  if(!DB.settings || currentUser.role!=="Admin") return;
+  const s = DB.settings;
+  const now = Date.now();
+
+  // Hot leads
+  if(s.notifyHotLead){
+    DB.enquiries.filter(e=>e.status==="hot" && e.stage==="open").forEach(e=>{
+      pushNotification({ type:"hotLead", priority:"high", title:"🔥 Hot lead alert",
+        message:`${e.name} at ${e.company} has shown strong buying intent.`,
+        waMessage:`🔥 Hot Lead Alert\n${e.name} — ${e.company}\nProduct: ${e.products.join(", ")}\nSalesperson: ${e.salesperson}\nAction recommended: Immediate follow-up.`,
+        enquiryId:e.id, dedupeKey:`hot-${e.id}` });
+    });
+  }
+  // Overdue follow-ups
+  if(s.notifyOverdue){
+    DB.enquiries.filter(e=>e.stage==="open" && e.followup && daysDiff(e.followup) < 0).forEach(e=>{
+      const days = Math.abs(daysDiff(e.followup));
+      const priority = days >= 1 && (now - new Date(e.followup+"T00:00:00").getTime()) >= 24*3600e3 ? "critical" : "high";
+      pushNotification({ type:"overdue", priority, title:"⚠️ Follow-up overdue",
+        message:`${e.name} at ${e.company} — follow-up is ${days} day${days===1?"":"s"} overdue.`,
+        waMessage:`⚠️ Follow-Up Overdue\nSalesperson: ${e.salesperson}\nCustomer: ${e.name} — ${e.company}\nWas due: ${fmtDate(e.followup)}\nStatus: Not completed`,
+        enquiryId:e.id, dedupeKey:`overdue-${e.id}-${e.followup}` });
+    });
+  }
+  // Employee inactivity
+  if(s.notifyInactivity){
+    const thresholdMs = (s.inactivityHours||24) * 3600e3;
+    const bySp = {};
+    DB.enquiries.filter(e=>e.stage==="open").forEach(e=>{
+      (bySp[e.salesperson] = bySp[e.salesperson] || []).push(e);
+    });
+    Object.entries(bySp).forEach(([sp, list])=>{
+      const stale = list.filter(e => (now - lastActivityAt(e)) > thresholdMs);
+      if(stale.length){
+        const key = `inactivity-${sp}-${todayISO()}`;
+        pushNotification({ type:"inactivity", priority:"high", title:"Employee activity alert",
+          message:`${sp} has ${list.length} active leads and hasn't logged activity on ${stale.length} of them in over ${s.inactivityHours}h.`,
+          waMessage:`Employee Activity Alert\n${sp} has ${list.length} active leads and has not recorded an activity on ${stale.length} of them for more than ${s.inactivityHours} hours.`,
+          enquiryId:null, dedupeKey:key });
+      }
+    });
+  }
+  renderNavCounts();
+  if(!document.getElementById("view-notifications").classList.contains("hidden")) renderNotifications();
+}
+
+function composeDailyReportMessage(){
+  const list = DB.enquiries;
+  const today = todayISO();
+  const newToday = list.filter(e=>e.date===today).length;
+  const qualified = list.filter(e=>e.stage==="open" && (e.status==="hot"||e.status==="medium")).length;
+  const hot = list.filter(e=>e.stage==="open" && e.status==="hot").length;
+  const wonToday = list.filter(e=>e.stage==="won" && e.wonDetails && e.wonDetails.date===today).length;
+  const revenue = list.filter(e=>e.stage==="won" && e.wonDetails && e.wonDetails.date===today).reduce((s,e)=>s+Number(e.wonDetails.value||0),0);
+  const completedToday = list.reduce((s,e)=> s + e.activities.filter(a=>a.date===today).length, 0);
+  const overdue = list.filter(e=>e.stage==="open" && e.followup && daysDiff(e.followup)<0);
+  const priorityLines = overdue.slice(0,3).map((e,i)=>`${i+1}. ${e.company} — ${statusLabel(e.status)} lead — Follow-up overdue`).join("\n");
+  return `📋 Daily Sales Report — ${fmtDateLong(today)}\n\nNew Leads: ${newToday}\nQualified Leads: ${qualified}\nHot Leads: ${hot}\nClients Acquired Today: ${wonToday}\nRevenue Today: ₹${revenue.toLocaleString("en-IN")}\nActivities Logged Today: ${completedToday}\nFollow-ups Overdue: ${overdue.length}` + (priorityLines ? `\n\nTop priority:\n${priorityLines}` : "");
+}
+
+function renderNotifications(){
+  const s = DB.settings;
+  document.getElementById("ns-wa-number").value = s.adminWhatsApp;
+  document.getElementById("ns-inactivity-hours").value = s.inactivityHours;
+  document.getElementById("ns-cat-newlead").checked = s.notifyNewLead;
+  document.getElementById("ns-cat-hotlead").checked = s.notifyHotLead;
+  document.getElementById("ns-cat-overdue").checked = s.notifyOverdue;
+  document.getElementById("ns-cat-won").checked = s.notifyWon;
+  document.getElementById("ns-cat-lost").checked = s.notifyLost;
+  document.getElementById("ns-cat-inactivity").checked = s.notifyInactivity;
+
+  const pf = document.getElementById("nf-priority").value;
+  const tf = document.getElementById("nf-type").value;
+  let list = DB.notifications.slice();
+  if(pf) list = list.filter(n=>n.priority===pf);
+  if(tf) list = list.filter(n=>n.type===tf);
+  list.sort((a,b)=> b.createdAt.localeCompare(a.createdAt));
+
+  const typeLabel = {newLead:"New lead", hotLead:"Hot lead", overdue:"Overdue follow-up", won:"Deal won", lost:"Deal lost", inactivity:"Employee inactivity", dailyReport:"Daily report"};
+  document.getElementById("notif-list").innerHTML = list.length ? list.map(n=>{
+    const when = new Date(n.createdAt);
+    const timeAgo = fmtDateLong(n.createdAt.slice(0,10)) + " · " + fmtTime(pad(when.getHours())+":"+pad(when.getMinutes()));
+    return `<div class="notif-card ${n.priority} ${n.read?'':'unread'}">
+      <div class="notif-head">
+        <div style="display:flex;align-items:center;gap:8px;">
+          <span class="prio-badge ${n.priority}">${n.priority}</span>
+          <span class="notif-title">${esc(n.title)}</span>
+        </div>
+        <span class="notif-time">${esc(typeLabel[n.type]||n.type)} · ${esc(timeAgo)}</span>
+      </div>
+      <div class="notif-msg">${esc(n.message)}</div>
+      <div class="notif-actions">
+        <a class="btn btn-primary btn-sm" href="${waLink(DB.settings.adminWhatsApp, n.waMessage)}" target="_blank" rel="noopener" onclick="markNotifRead('${n.id}')">💬 Send to WhatsApp</a>
+        ${n.enquiryId ? `<button class="btn btn-secondary btn-sm" onclick="openDetail('${n.enquiryId}')">Open lead</button>` : ""}
+        ${!n.read ? `<button class="btn btn-ghost btn-sm" onclick="markNotifRead('${n.id}')">Mark read</button>` : ""}
+      </div>
+    </div>`;
+  }).join("") : '<div class="empty-state">No alerts match these filters.</div>';
+}
+window.markNotifRead = function(id){
+  const n = DB.notifications.find(x=>x.id===id); if(!n) return;
+  n.read = true; saveDB(); renderNavCounts();
+  if(!document.getElementById("view-notifications").classList.contains("hidden")) renderNotifications();
+};
+document.getElementById("nf-priority").addEventListener("change", renderNotifications);
+document.getElementById("nf-type").addEventListener("change", renderNotifications);
+document.getElementById("nf-reset").addEventListener("click", ()=>{
+  document.getElementById("nf-priority").value=""; document.getElementById("nf-type").value="";
+  renderNotifications();
+});
+document.getElementById("btn-mark-all-read").addEventListener("click", ()=>{
+  DB.notifications.forEach(n=>n.read=true); saveDB(); renderNavCounts(); renderNotifications();
+  toast("All alerts marked read");
+});
+document.getElementById("btn-send-daily-report").addEventListener("click", ()=>{
+  const msg = composeDailyReportMessage();
+  pushNotification({ type:"dailyReport", priority:"low", title:"📋 Daily report ready",
+    message:"Today's sales summary is ready to send.", waMessage: msg,
+    enquiryId:null, dedupeKey:`daily-${todayISO()}-${uid()}` });
+  renderNavCounts(); renderNotifications();
+  window.open(waLink(DB.settings.adminWhatsApp, msg), "_blank", "noopener");
+});
+document.getElementById("btn-save-notif-settings").addEventListener("click", ()=>{
+  const num = document.getElementById("ns-wa-number").value.replace(/\D/g,"");
+  if(num.length < 10){ toast("Enter a valid WhatsApp number with country code"); return; }
+  DB.settings.adminWhatsApp = num;
+  DB.settings.inactivityHours = Math.max(1, Number(document.getElementById("ns-inactivity-hours").value) || 24);
+  DB.settings.notifyNewLead = document.getElementById("ns-cat-newlead").checked;
+  DB.settings.notifyHotLead = document.getElementById("ns-cat-hotlead").checked;
+  DB.settings.notifyOverdue = document.getElementById("ns-cat-overdue").checked;
+  DB.settings.notifyWon = document.getElementById("ns-cat-won").checked;
+  DB.settings.notifyLost = document.getElementById("ns-cat-lost").checked;
+  DB.settings.notifyInactivity = document.getElementById("ns-cat-inactivity").checked;
+  saveDB();
+  toast("Notification settings saved");
+});
+
+/* ============================================================
+   ACCOUNTING EXPORT  (Zoho Books / Vyapar) — no API keys held
+   here; these just produce correctly-shaped files to import.
+=============================================================== */
+function downloadCSV(filename, headers, rows){
+  const csv = [headers, ...rows].map(r=> r.map(v=>`"${String(v??"").replace(/"/g,'""')}"`).join(",")).join("\n");
+  const blob = new Blob([csv], {type:"text/csv"});
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(blob); a.download = filename; a.click();
+}
+function dealProductLabel(e){
+  return e.products.join(" + ") + (e.productOther ? " + " + e.productOther : "");
+}
+const ZOHO_HEADERS = ["Customer Name","Company Name","GSTIN","Phone","Email","Billing City","Billing State","Invoice Number","Invoice Date","Due Date","Item Name","Quantity","Rate","Amount","PO Number","Payment Terms","Notes"];
+function zohoRowFor(e){
+  const invoiceNo = e.wonDetails.invoice || ("PV-" + e.id.slice(0,6).toUpperCase());
+  const rate = e.qty ? (Number(e.wonDetails.value)/Number(e.qty)).toFixed(2) : e.wonDetails.value;
+  return [e.name, e.company, "", e.phone, "", e.city, "", invoiceNo, fmtDate(e.wonDetails.date), "", dealProductLabel(e), e.qty, rate, e.wonDetails.value, e.wonDetails.po||"", e.wonDetails.terms||"", `Synced from Pulvick CRM enquiry ${e.id}`];
+}
+const VYAPAR_HEADERS = ["Party Name","Phone Number","City","Pincode","GSTIN","Item Name","Quantity","Unit","Sale Price","Invoice Date","PO Number","Notes"];
+function vyaparRowFor(e){
+  return [e.company, e.phone, e.city, e.pincode, "", dealProductLabel(e), e.qty, e.unit, e.wonDetails.value, fmtDate(e.wonDetails.date), e.wonDetails.po||"", `Synced from Pulvick CRM enquiry ${e.id}`];
+}
+window.exportSingleZoho = function(id){
+  const e = findEnquiry(id); if(!e || !e.wonDetails) return;
+  downloadCSV(`pulvick_zohobooks_${e.company.replace(/[^a-z0-9]/gi,"_")}.csv`, ZOHO_HEADERS, [zohoRowFor(e)]);
+  toast("Zoho Books CSV downloaded");
+};
+window.exportSingleVyapar = function(id){
+  const e = findEnquiry(id); if(!e || !e.wonDetails) return;
+  downloadCSV(`pulvick_vyapar_${e.company.replace(/[^a-z0-9]/gi,"_")}.csv`, VYAPAR_HEADERS, [vyaparRowFor(e)]);
+  toast("Vyapar reference CSV downloaded");
+};
+document.getElementById("btn-export-zoho-all").addEventListener("click", ()=>{
+  const won = DB.enquiries.filter(e=>e.stage==="won" && e.wonDetails);
+  if(!won.length){ toast("No won deals yet"); return; }
+  downloadCSV("pulvick_zohobooks_export.csv", ZOHO_HEADERS, won.map(zohoRowFor));
+  toast(`${won.length} deal${won.length===1?"":"s"} exported for Zoho Books`);
+});
+document.getElementById("btn-export-vyapar-all").addEventListener("click", ()=>{
+  const won = DB.enquiries.filter(e=>e.stage==="won" && e.wonDetails);
+  if(!won.length){ toast("No won deals yet"); return; }
+  downloadCSV("pulvick_vyapar_export.csv", VYAPAR_HEADERS, won.map(vyaparRowFor));
+  toast(`${won.length} deal${won.length===1?"":"s"} exported for Vyapar`);
+});
+
+/* ============================================================
+   USERS  (role-gated: Admin = full CRUD, Management = create-only
+   when permitted, Salesperson = no access)
+=============================================================== */
+let editingUserId = null;
+
+function canCurrentUserCreate(){
+  if(currentUser.role === "Admin") return true;
+  if(currentUser.role === "Management"){
+    const me = findUserById(currentUser.id);
+    return !!(me && me.canCreateUsers);
+  }
+  return false;
+}
+
+function renderUsersView(){
+  const isAdmin = currentUser.role === "Admin";
+  const me = findUserById(currentUser.id);
+
+  document.getElementById("users-sub").textContent = isAdmin
+    ? "Every account with access to the CRM"
+    : "Salespeople you've added to the team";
+  document.getElementById("users-table-title").textContent = isAdmin ? "All users" : "Your team";
+
+  // header action button
+  const actions = document.getElementById("users-head-actions");
+  if(isAdmin){
+    actions.innerHTML = `<button class="btn btn-primary btn-sm" id="btn-new-user">+ New user</button>`;
+    document.getElementById("btn-new-user").addEventListener("click", ()=> openUserModal());
+  } else if(canCurrentUserCreate()){
+    actions.innerHTML = `<button class="btn btn-primary btn-sm" id="btn-new-user">+ New salesperson</button>`;
+    document.getElementById("btn-new-user").addEventListener("click", ()=> openUserModal());
+  } else {
+    actions.innerHTML = "";
+  }
+
+  // permission banner for management without create rights
+  const banner = document.getElementById("users-permission-banner");
+  if(!isAdmin && !canCurrentUserCreate()){
+    banner.innerHTML = `<div class="dup-banner show" style="border-color:var(--border-strong);background:var(--surface-alt);">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px;"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+      <div><strong>You can't create users yet</strong><div>Ask your Admin to enable "create users" for your account.</div></div>
+    </div>`;
+  } else { banner.innerHTML = ""; }
+
+  // table rows — scope + search filter
+  const q = (document.getElementById("users-search").value || "").trim().toLowerCase();
+  let rows = isAdmin ? DB.users.slice() : DB.users.filter(u=>u.createdBy===currentUser.id);
+  if(q){
+    rows = rows.filter(u => (u.name+" "+u.username+" "+u.role).toLowerCase().includes(q));
+  }
+  const lockedCount = (isAdmin ? DB.users : rows).filter(u=>u.locked).length;
+  const sorted = rows.slice().sort((a,b)=> a.role.localeCompare(b.role) || a.name.localeCompare(b.name));
+  const body = sorted.map(u=>{
+    const createdByUser = u.createdBy ? findUserById(u.createdBy) : null;
+    const roleBadge = `<span class="badge neutral">${esc(u.role)}</span>`;
+    let statusPill;
+    if(u.locked){
+      statusPill = isAdmin
+        ? `<span class="perm-pill" style="background:var(--danger-soft);color:var(--danger);cursor:pointer;" onclick="unlockUser('${u.id}')" title="Click to unlock">🔒 Locked</span>`
+        : `<span class="perm-pill" style="background:var(--danger-soft);color:var(--danger);">🔒 Locked</span>`;
+    } else {
+      statusPill = isAdmin
+        ? `<span class="perm-pill ${u.active?'on':''}" style="cursor:pointer;" onclick="toggleUserActive('${u.id}')">${u.active?'Active':'Inactive'}</span>`
+        : `<span class="perm-pill ${u.active?'on':''}">${u.active?'Active':'Inactive'}</span>`;
+    }
+    const permCell = u.role==="Management"
+      ? (isAdmin ? `<span class="perm-pill ${u.canCreateUsers?'on':''}" style="cursor:pointer;" onclick="toggleCreatePermission('${u.id}')">${u.canCreateUsers?'Can create':'Blocked'}</span>`
+                 : `<span class="perm-pill ${u.canCreateUsers?'on':''}">${u.canCreateUsers?'Can create':'Blocked'}</span>`)
+      : "—";
+    const pwCell = isAdmin ? `<span style="font-family:monospace;font-size:11.5px;color:var(--ink-faint);cursor:pointer;" title="Click to reveal" onclick="revealPassword(this,'${u.id}')">••••••••</span>` : "—";
+    const actionsCell = isAdmin
+      ? `<div style="display:flex;gap:4px;flex-wrap:wrap;">
+           ${u.locked ? `<button class="btn btn-secondary btn-sm" onclick="unlockUser('${u.id}')">Unlock</button>` : ""}
+           <button class="btn btn-ghost btn-sm" onclick="openResetPasswordModal('${u.id}')">Reset password</button>
+           <button class="btn btn-ghost btn-sm" onclick="openUserModal('${u.id}')">Edit</button>
+           <button class="btn btn-ghost btn-sm" style="color:var(--danger);" onclick="deleteUser('${u.id}')">Delete</button>
+         </div>`
+      : "—";
+    return `<tr>
+      <td><strong>${esc(u.name)}</strong>${(currentUser.id===u.id)?' <span style="color:var(--ink-faint);font-size:11px;">(you)</span>':''}</td>
+      <td>${esc(u.username)}</td>
+      <td>${roleBadge}</td>
+      <td>${createdByUser ? esc(createdByUser.name) : "—"}</td>
+      <td>${permCell}</td>
+      <td>${statusPill}</td>
+      <td>${pwCell}</td>
+      <td style="white-space:nowrap;">${actionsCell}</td>
+    </tr>`;
+  }).join("");
+  document.getElementById("users-table").innerHTML = `
+    <thead><tr><th>Name</th><th>Username</th><th>Role</th><th>Created by</th><th>Permission</th><th>Status</th><th>Password</th><th>Actions</th></tr></thead>
+    <tbody>${body || `<tr><td colspan="8" class="empty-hint">${q ? 'No users match your search.' : (isAdmin?'No users yet.':"You haven't added anyone yet.")}</td></tr>`}</tbody>`;
+
+  if(isAdmin && lockedCount>0){
+    document.getElementById("users-sub").textContent += ` · ${lockedCount} account${lockedCount===1?'':'s'} locked out`;
+  }
+
+  document.getElementById("users-hier-tree").innerHTML = renderHierarchyTreeHTML();
+}
+document.getElementById("users-search").addEventListener("input", ()=> renderUsersView());
+
+window.toggleUserActive = function(id){
+  if(currentUser.role!=="Admin") return;
+  const u = findUserById(id); if(!u) return;
+  if(u.id===currentUser.id){ toast("You can't deactivate your own account"); return; }
+  u.active = !u.active; saveDB(); renderUsersView(); populateStaticSelects();
+};
+window.toggleCreatePermission = function(id){
+  if(currentUser.role!=="Admin") return;
+  const u = findUserById(id); if(!u || u.role!=="Management") return;
+  u.canCreateUsers = !u.canCreateUsers; saveDB(); renderUsersView();
+  toast(u.canCreateUsers ? `${u.name} can now create salespeople` : `${u.name}'s create access was revoked`);
+};
+window.revealPassword = function(el, id){
+  const u = findUserById(id); if(!u) return;
+  el.textContent = u.password; el.style.color = "var(--ink)"; el.style.cursor = "default";
+  setTimeout(()=>{ el.textContent = "••••••••"; el.style.color = "var(--ink-faint)"; el.style.cursor="pointer"; }, 4000);
+};
+window.deleteUser = function(id){
+  if(currentUser.role!=="Admin") return;
+  const u = findUserById(id); if(!u) return;
+  if(u.id===currentUser.id){ toast("You can't delete your own account"); return; }
+  if(u.role==="Admin" && DB.users.filter(x=>x.role==="Admin").length<=1){ toast("At least one Admin must remain"); return; }
+  if(!confirm(`Delete ${u.name}? This can't be undone. Their existing enquiry history stays intact.`)) return;
+  // reassign anyone this user directly created up to the root admin, so the tree stays connected
+  const root = adminUser();
+  DB.users.forEach(x=>{ if(x.createdBy===id) x.createdBy = root ? root.id : null; });
+  DB.users = DB.users.filter(x=>x.id!==id);
+  saveDB(); renderUsersView(); populateStaticSelects(); renderNavCounts();
+  toast(`${u.name} was removed`);
+};
+
+window.unlockUser = function(id){
+  if(currentUser.role!=="Admin") return;
+  const u = findUserById(id); if(!u) return;
+  u.locked = false; u.failedAttempts = 0;
+  saveDB(); renderUsersView();
+  toast(`${u.name}'s account is unlocked`);
+};
+
+/* ---- reset password modal ---- */
+let resettingUserId = null;
+function genPassword(){
+  const chars = "ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnpqrstuvwxyz23456789";
+  let out = "";
+  for(let i=0;i<10;i++) out += chars[Math.floor(Math.random()*chars.length)];
+  return out;
+}
+window.openResetPasswordModal = function(id){
+  if(currentUser.role!=="Admin") return;
+  const u = findUserById(id); if(!u) return;
+  resettingUserId = id;
+  document.getElementById("rp-user-name").textContent = u.name;
+  document.getElementById("rp-password").value = "";
+  document.getElementById("rp-password").disabled = false;
+  document.getElementById("rp-generate").checked = false;
+  openModal("modal-reset-pw");
+  setTimeout(()=>document.getElementById("rp-password").focus(), 60);
+};
+document.getElementById("rp-generate").addEventListener("change", (e)=>{
+  const field = document.getElementById("rp-password");
+  if(e.target.checked){ field.value = genPassword(); field.disabled = true; }
+  else { field.value = ""; field.disabled = false; }
+});
+document.getElementById("reset-pw-form").addEventListener("submit", (e)=>{
+  e.preventDefault();
+  if(currentUser.role!=="Admin" || !resettingUserId) return;
+  const u = findUserById(resettingUserId); if(!u) return;
+  const newPw = document.getElementById("rp-generate").checked ? document.getElementById("rp-password").value || genPassword() : document.getElementById("rp-password").value;
+  if(!newPw){ toast("Enter a password"); return; }
+  u.password = newPw;
+  u.locked = false; u.failedAttempts = 0;
+  saveDB();
+  closeModal("modal-reset-pw");
+  renderUsersView();
+  toast(`Password reset for ${u.name}${document.getElementById("rp-generate").checked ? ": " + newPw : ""}`);
+});
+
+/* ---- create / edit modal ---- */
+function openUserModal(userId){
+  editingUserId = userId || null;
+  const isAdmin = currentUser.role === "Admin";
+  const editing = !!editingUserId;
+  const existing = editing ? findUserById(editingUserId) : null;
+
+  document.getElementById("user-form").reset();
+  document.getElementById("user-form-error").classList.add("hidden");
+  document.getElementById("user-modal-title").textContent = editing ? "Edit user" : (isAdmin ? "New user" : "New salesperson");
+
+  const roleField = document.getElementById("us-role-field");
+  const permField = document.getElementById("us-perm-field");
+  const roleSelect = document.getElementById("us-role");
+
+  if(isAdmin){
+    roleField.style.display = "";
+    roleSelect.disabled = editing && existing && existing.role==="Admin" && DB.users.filter(u=>u.role==="Admin").length<=1;
+  } else {
+    roleField.style.display = "none"; // management can only create Salesperson
+  }
+
+  if(existing){
+    document.getElementById("us-name").value = existing.name;
+    document.getElementById("us-username").value = existing.username;
+    document.getElementById("us-password").value = existing.password;
+    roleSelect.value = existing.role;
+    document.getElementById("us-can-create").checked = !!existing.canCreateUsers;
+  } else {
+    roleSelect.value = isAdmin ? "Salesperson" : "Salesperson";
+    document.getElementById("us-can-create").checked = false;
+  }
+  permField.style.display = (isAdmin && roleSelect.value==="Management") ? "" : "none";
+  openModal("modal-user");
+  setTimeout(()=>document.getElementById("us-name").focus(), 60);
+}
+document.getElementById("us-role").addEventListener("change", (e)=>{
+  document.getElementById("us-perm-field").style.display = (currentUser.role==="Admin" && e.target.value==="Management") ? "" : "none";
+});
+document.getElementById("user-form").addEventListener("submit", (e)=>{
+  e.preventDefault();
+  const isAdmin = currentUser.role === "Admin";
+  const errBox = document.getElementById("user-form-error");
+  errBox.classList.add("hidden");
+
+  const name = document.getElementById("us-name").value.trim();
+  const username = document.getElementById("us-username").value.trim();
+  const password = document.getElementById("us-password").value;
+  const role = isAdmin ? document.getElementById("us-role").value : "Salesperson";
+  const canCreateUsers = isAdmin && role==="Management" ? document.getElementById("us-can-create").checked : false;
+
+  if(!isAdmin && !canCurrentUserCreate()){ errBox.textContent="You don't have permission to create users."; errBox.classList.remove("hidden"); return; }
+
+  const clash = DB.users.find(u=> u.username.toLowerCase()===username.toLowerCase() && u.id!==editingUserId);
+  if(clash){ errBox.textContent = "That username is already taken."; errBox.classList.remove("hidden"); return; }
+
+  if(editingUserId){
+    if(!isAdmin){ errBox.textContent="Only an Admin can edit users."; errBox.classList.remove("hidden"); return; }
+    const u = findUserById(editingUserId);
+    u.name=name; u.username=username; u.password=password; u.role=role; u.canCreateUsers=canCreateUsers;
+    saveDB(); toast("User updated");
+  } else {
+    DB.users.push({ id: uid(), username, password, name, role, createdBy: currentUser.id, canCreateUsers, active:true, failedAttempts:0, locked:false });
+    saveDB(); toast(isAdmin ? "User created" : "Salesperson added to your team");
+  }
+  closeModal("modal-user");
+  renderUsersView(); populateStaticSelects(); renderNavCounts();
+});
+
+/* ============================================================
+   MODAL HELPERS
+=============================================================== */
+function openModal(id){ document.getElementById(id).classList.add("show"); }
+function closeModal(id){ document.getElementById(id).classList.remove("show"); }
+document.querySelectorAll("[data-close]").forEach(b=>{
+  b.addEventListener("click", (e)=>{
+    const overlay = e.target.closest(".modal-overlay");
+    overlay.classList.remove("show");
+  });
+});
+document.querySelectorAll(".modal-overlay").forEach(ov=>{
+  ov.addEventListener("click", (e)=>{ if(e.target===ov) ov.classList.remove("show"); });
+});
+
+/* ============================================================
+   NEW ENQUIRY FORM
+=============================================================== */
+document.getElementById("btn-new-enquiry").addEventListener("click", ()=> openEnquiryModal());
+function openEnquiryModal(){
+  document.getElementById("enquiry-form").reset();
+  document.getElementById("fe-date").value = todayISO();
+  document.getElementById("fe-followup").value = todayISO();
+  selectedProducts = [];
+  document.querySelectorAll("#fe-products .chip-check").forEach(c=>c.classList.remove("checked"));
+  document.querySelectorAll("#fe-products input").forEach(i=>i.checked=false);
+  document.getElementById("fe-product-other").style.display="none";
+  document.getElementById("fe-designation-other").style.display="none";
+  document.getElementById("fe-source-other").style.display="none";
+  document.getElementById("fe-phone-err").style.display="none";
+  document.getElementById("dup-banner").classList.remove("show");
+  selectedStatus="hot"; dupMatch=null;
+  document.querySelectorAll("#fe-status-pick .status-opt").forEach(o=>o.classList.toggle("checked", o.dataset.val==="hot"));
+  if(currentUser.role==="Salesperson") document.getElementById("fe-salesperson").value = currentUser.name;
+  openModal("modal-enquiry");
+  setTimeout(()=>document.getElementById("fe-name").focus(), 60);
+}
+
+document.getElementById("fe-products").addEventListener("click", (e)=>{
+  const chip = e.target.closest(".chip-check"); if(!chip) return;
+  const cb = chip.querySelector("input");
+  if(e.target !== cb) cb.checked = !cb.checked;
+  chip.classList.toggle("checked", cb.checked);
+  const val = chip.dataset.val;
+  if(cb.checked){ if(!selectedProducts.includes(val)) selectedProducts.push(val); }
+  else { selectedProducts = selectedProducts.filter(v=>v!==val); }
+  document.getElementById("fe-product-other").style.display = selectedProducts.includes("Others") ? "block" : "none";
+});
+
+document.getElementById("fe-status-pick").addEventListener("click", (e)=>{
+  const opt = e.target.closest(".status-opt"); if(!opt) return;
+  selectedStatus = opt.dataset.val;
+  document.querySelectorAll("#fe-status-pick .status-opt").forEach(o=>o.classList.toggle("checked", o===opt));
+});
+
+document.getElementById("fe-designation").addEventListener("change", (e)=>{
+  document.getElementById("fe-designation-other").style.display = e.target.value==="Others" ? "block" : "none";
+});
+document.getElementById("fe-source").addEventListener("change", (e)=>{
+  document.getElementById("fe-source-other").style.display = e.target.value==="Others" ? "block" : "none";
+});
+document.getElementById("fe-same-phone").addEventListener("change", (e)=>{
+  if(e.target.checked) document.getElementById("fe-whatsapp").value = document.getElementById("fe-phone").value;
+});
+document.getElementById("fe-phone").addEventListener("input", (e)=>{
+  e.target.value = e.target.value.replace(/\D/g,"").slice(0,10);
+  if(document.getElementById("fe-same-phone").checked) document.getElementById("fe-whatsapp").value = e.target.value;
+  checkDuplicate(e.target.value);
+});
+document.getElementById("fe-whatsapp").addEventListener("input", (e)=>{ e.target.value = e.target.value.replace(/\D/g,"").slice(0,10); });
+document.getElementById("fe-pincode").addEventListener("input", (e)=>{ e.target.value = e.target.value.replace(/\D/g,"").slice(0,6); });
+
+function checkDuplicate(phone){
+  const banner = document.getElementById("dup-banner");
+  if(phone.length!==10){ banner.classList.remove("show"); dupMatch=null; return; }
+  const match = DB.enquiries.find(e=>e.phone===phone);
+  if(match){
+    dupMatch = match;
+    document.getElementById("dup-details").innerHTML = `${esc(match.company)} — ${esc(match.name)}<br>Last enquiry: ${fmtDate(match.date)} · Salesperson: ${esc(match.salesperson)} · Status: ${statusEmoji(match.status)} ${statusLabel(match.status)}`;
+    banner.classList.add("show");
+  } else {
+    dupMatch = null; banner.classList.remove("show");
+  }
+}
+document.getElementById("dup-open").addEventListener("click", ()=>{
+  if(dupMatch){ closeModal("modal-enquiry"); openDetail(dupMatch.id); }
+});
+document.getElementById("dup-dismiss").addEventListener("click", ()=>{
+  document.getElementById("dup-banner").classList.remove("show");
+});
+
+document.getElementById("enquiry-form").addEventListener("submit", (e)=>{
+  e.preventDefault();
+  const phone = document.getElementById("fe-phone").value;
+  const whatsapp = document.getElementById("fe-whatsapp").value;
+  const pincode = document.getElementById("fe-pincode").value;
+  let ok = true;
+  if(phone.length!==10){ document.getElementById("fe-phone-err").style.display="block"; ok=false; }
+  else document.getElementById("fe-phone-err").style.display="none";
+  if(selectedProducts.length===0){ toast("Select at least one product"); ok=false; }
+  if(pincode.length!==6){ toast("Pincode must be 6 digits"); ok=false; }
+  if(!ok) return;
+
+  const notes = document.getElementById("fe-notes").value.trim();
+  const entry = {
+    id: uid(),
+    date: document.getElementById("fe-date").value,
+    name: document.getElementById("fe-name").value.trim(),
+    designation: document.getElementById("fe-designation").value,
+    designationOther: document.getElementById("fe-designation-other").value.trim(),
+    company: document.getElementById("fe-company").value.trim(),
+    phone, whatsapp,
+    city: document.getElementById("fe-city").value.trim(),
+    pincode,
+    salesperson: document.getElementById("fe-salesperson").value,
+    products: selectedProducts.slice(),
+    productOther: document.getElementById("fe-product-other").value.trim(),
+    qty: Number(document.getElementById("fe-qty").value),
+    unit: document.getElementById("fe-unit").value,
+    etype: document.getElementById("fe-etype").value,
+    status: selectedStatus,
+    source: document.getElementById("fe-source").value,
+    sourceOther: document.getElementById("fe-source-other").value.trim(),
+    followup: document.getElementById("fe-followup").value,
+    supplier: document.getElementById("fe-supplier").value.trim(),
+    stage: "open", wonDetails: null, lostDetails: null,
+    activities: [],
+    createdAt: new Date().toISOString()
+  };
+  if(notes){
+    entry.activities.push({id:uid(), type:"Call Client", date: entry.date, time: pad(new Date().getHours())+":"+pad(new Date().getMinutes()), user: currentUser.name, notes, nextFollowup: entry.followup, createdAt: entry.date});
+  }
+  DB.enquiries.unshift(entry);
+  saveDB();
+  if(DB.settings && DB.settings.notifyNewLead){
+    pushNotification({ type:"newLead", priority:"medium", title:"New lead received",
+      message:`${entry.name} at ${entry.company} enquired about ${entry.products.join(", ")}.`,
+      waMessage:`New Lead Received\nCustomer: ${entry.name} — ${entry.company}\nRequirement: ${entry.products.join(", ")}\nSalesperson: ${entry.salesperson}\nSource: ${entry.source==="Others"?entry.sourceOther:entry.source}`,
+      enquiryId: entry.id, dedupeKey:`new-${entry.id}` });
+  }
+  closeModal("modal-enquiry");
+  toast("Enquiry saved");
+  renderNavCounts();
+  showView("enquiries");
+  populateStaticSelects();
+});
+
+/* ============================================================
+   DETAIL VIEW
+=============================================================== */
+window.openDetail = function(id){
+  currentDetailId = id;
+  showView("detail");
+  renderDetail();
+};
+function findEnquiry(id){ return DB.enquiries.find(e=>e.id===id); }
+
+function renderDetail(){
+  const e = findEnquiry(currentDetailId);
+  if(!e){ showView("enquiries"); return; }
+  document.getElementById("d-company").textContent = e.company;
+  document.getElementById("d-sub").textContent = `${e.name} · ${e.designation==="Others"?e.designationOther:e.designation} · ${e.city}`;
+  document.getElementById("d-status-badge").innerHTML = e.stage==="won" ? '<span class="badge won">✓ Won</span>' : e.stage==="lost" ? `<span class="badge lost">✕ Lost — ${esc(e.lostDetails?.reason==="Other"?e.lostDetails.other:e.lostDetails?.reason||"")}</span>` : `<span class="badge ${e.status}"><span class="dot"></span>${statusLabel(e.status)}</span>`;
+
+  // stage track
+  const stageIdx = STAGES.indexOf(inferStage(e));
+  document.getElementById("d-stage-track").innerHTML = STAGES.map((s,i)=>{
+    const cls = i<stageIdx ? "done" : i===stageIdx ? "current" : "";
+    return `<div class="stage-pt ${cls}"><div class="stage-dot"></div><div class="stage-lbl">${s}</div></div>` + (i<STAGES.length-1 ? '<div class="stage-line"></div>' : '');
+  }).join("");
+
+  // quick actions
+  const qa = document.getElementById("d-quick-actions");
+  qa.innerHTML = `
+    <a class="btn btn-secondary btn-sm" href="tel:${esc(e.phone)}">📞 Call client</a>
+    <a class="btn btn-secondary btn-sm" href="https://wa.me/91${esc(e.whatsapp)}" target="_blank" rel="noopener">💬 WhatsApp</a>
+    <button class="btn btn-secondary btn-sm" onclick="quickActivity('Send Quotation')">Send quotation</button>
+    <button class="btn btn-secondary btn-sm" onclick="quickActivity('Send Sample')">Send sample</button>
+    <button class="btn btn-secondary btn-sm" onclick="quickActivity('Schedule Visit')">Schedule visit</button>
+    ${e.stage==="open" ? `<button class="btn btn-primary btn-sm" onclick="openWonModal()">Mark won</button><button class="btn btn-danger btn-sm" onclick="openLostModal()">Mark lost</button>` : ""}
+  `;
+
+  document.getElementById("d-info").innerHTML = `
+    <div><div class="k">Phone</div><div class="v">${esc(e.phone)}</div></div>
+    <div><div class="k">Salesperson</div><div class="v">${esc(e.salesperson)}</div></div>
+    <div><div class="k">Products</div><div class="v product-tags">${e.products.map(p=>`<span class="tag">${esc(p)}</span>`).join("")}${e.productOther?`<span class="tag">${esc(e.productOther)}</span>`:""}</div></div>
+    <div><div class="k">Quantity</div><div class="v">${e.qty} ${esc(e.unit)}</div></div>
+    <div><div class="k">Next follow-up</div><div class="v">${fmtDate(e.followup)}</div></div>
+    <div><div class="k">Current supplier</div><div class="v">${esc(e.supplier)||"—"}</div></div>
+  `;
+
+  // timeline
+  const acts = e.activities.slice().sort((a,b)=> (b.date+b.time).localeCompare(a.date+a.time));
+  document.getElementById("d-timeline").innerHTML = acts.length ? acts.map(a=>`
+    <div class="tl-item">
+      <div class="tl-head"><strong>${esc(a.user)}</strong> · ${fmtDateLong(a.date)}${a.time?" — "+fmtTime(a.time):""} <span class="type">${esc(a.type)}</span></div>
+      <div class="tl-note">${esc(a.notes)||"—"}${a.nextFollowup?`<div class="nf">Next follow-up: ${fmtDate(a.nextFollowup)}</div>`:""}</div>
+    </div>`).join("") : '<div class="empty-hint">No activity logged yet.</div>';
+
+  // full info panel
+  let extra = "";
+  if(e.stage==="won" && e.wonDetails){
+    extra = `<div class="panel-body pad" style="border-top:1px solid var(--border);margin-top:2px;">
+      <div class="k" style="margin-bottom:8px;">Won details</div>
+      <div class="info-list">
+        <div><div class="k">Order date</div><div class="v">${fmtDate(e.wonDetails.date)}</div></div>
+        <div><div class="k">Order value</div><div class="v">₹${Number(e.wonDetails.value).toLocaleString("en-IN")}</div></div>
+        <div><div class="k">PO number</div><div class="v">${esc(e.wonDetails.po)||"—"}</div></div>
+        <div><div class="k">Invoice number</div><div class="v">${esc(e.wonDetails.invoice)||"—"}</div></div>
+        <div><div class="k">Payment terms</div><div class="v">${esc(e.wonDetails.terms)||"—"}</div></div>
+      </div>
+      ${currentUser.role==="Admin" ? `<div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;">
+        <button class="btn btn-secondary btn-sm" onclick="exportSingleZoho('${e.id}')">Export to Zoho Books</button>
+        <button class="btn btn-secondary btn-sm" onclick="exportSingleVyapar('${e.id}')">Export to Vyapar</button>
+      </div>` : ""}
+      </div>`;
+  }
+  document.getElementById("d-full-info").innerHTML = `
+    <div class="info-list">
+      <div><div class="k">Date of enquiry</div><div class="v">${fmtDate(e.date)}</div></div>
+      <div><div class="k">Enquiry type</div><div class="v">${esc(e.etype)}</div></div>
+      <div><div class="k">Source</div><div class="v">${esc(e.source==="Others"?e.sourceOther:e.source)}</div></div>
+      <div><div class="k">City / Pincode</div><div class="v">${esc(e.city)} - ${esc(e.pincode)}</div></div>
+      <div><div class="k">WhatsApp</div><div class="v">${esc(e.whatsapp)}</div></div>
+      <div><div class="k">Created</div><div class="v">${fmtDate(e.date)}</div></div>
+    </div>` + extra;
+}
+
+function inferStage(e){
+  if(e.stage==="won") return "Order";
+  const types = e.activities.map(a=>a.type);
+  if(types.includes("Negotiation")) return "Negotiation";
+  if(types.includes("Schedule Visit")) return "Visit";
+  if(types.includes("Send Sample")) return "Sample";
+  if(types.includes("Send Quotation")) return "Quotation";
+  if(types.includes("Call Client")) return "Contacted";
+  return "New Enquiry";
+}
+
+window.quickActivity = function(type){
+  document.getElementById("ac-type").value = type;
+  openActivityModal();
+};
+
+/* ---- add activity ---- */
+document.getElementById("btn-add-activity").addEventListener("click", ()=> openActivityModal());
+function openActivityModal(){
+  document.getElementById("activity-form").reset();
+  document.getElementById("ac-user").value = currentUser.name;
+  document.getElementById("ac-date").value = todayISO();
+  const d = new Date(); document.getElementById("ac-time").value = pad(d.getHours())+":"+pad(d.getMinutes());
+  openModal("modal-activity");
+}
+document.getElementById("activity-form").addEventListener("submit", (e)=>{
+  e.preventDefault();
+  const en = findEnquiry(currentDetailId); if(!en) return;
+  const nf = document.getElementById("ac-followup").value;
+  en.activities.push({
+    id: uid(), type: document.getElementById("ac-type").value,
+    date: document.getElementById("ac-date").value, time: document.getElementById("ac-time").value,
+    user: currentUser.name, notes: document.getElementById("ac-notes").value.trim(),
+    nextFollowup: nf, createdAt: new Date().toISOString()
+  });
+  if(nf) en.followup = nf;
+  saveDB(); closeModal("modal-activity"); renderDetail(); renderNavCounts();
+  toast("Activity added");
+});
+
+/* ---- won / lost ---- */
+window.openWonModal = function(){
+  document.getElementById("won-form").reset();
+  document.getElementById("wn-date").value = todayISO();
+  openModal("modal-won");
+};
+document.getElementById("won-form").addEventListener("submit", (e)=>{
+  e.preventDefault();
+  const en = findEnquiry(currentDetailId); if(!en) return;
+  en.stage = "won";
+  en.wonDetails = {
+    date: document.getElementById("wn-date").value,
+    value: Number(document.getElementById("wn-value").value),
+    po: document.getElementById("wn-po").value.trim(),
+    invoice: document.getElementById("wn-inv").value.trim(),
+    terms: document.getElementById("wn-terms").value.trim(),
+  };
+  en.activities.push({id:uid(), type:"Other", date: en.wonDetails.date, time: pad(new Date().getHours())+":"+pad(new Date().getMinutes()), user: currentUser.name, notes: `Marked as Won. Order value ₹${en.wonDetails.value}.`, nextFollowup:"", createdAt:new Date().toISOString()});
+  saveDB();
+  if(DB.settings && DB.settings.notifyWon){
+    pushNotification({ type:"won", priority:"high", title:"Client acquired",
+      message:`${en.company} converted — order value ₹${en.wonDetails.value.toLocaleString("en-IN")}.`,
+      waMessage:`✅ Client Acquired\nCustomer: ${en.company}\nSalesperson: ${en.salesperson}\nProduct: ${en.products.join(", ")}\nDeal Value: ₹${en.wonDetails.value.toLocaleString("en-IN")}\nAcquisition Date: ${fmtDate(en.wonDetails.date)}`,
+      enquiryId: en.id, dedupeKey:`won-${en.id}` });
+  }
+  closeModal("modal-won"); renderDetail(); renderNavCounts(); toast("Enquiry marked won 🎉");
+});
+window.openLostModal = function(){
+  document.getElementById("lost-form").reset();
+  document.getElementById("ls-other").style.display="none";
+  openModal("modal-lost");
+};
+document.getElementById("ls-reason").addEventListener("change", (e)=>{
+  document.getElementById("ls-other").style.display = e.target.value==="Other" ? "block":"none";
+});
+document.getElementById("lost-form").addEventListener("submit", (e)=>{
+  e.preventDefault();
+  const en = findEnquiry(currentDetailId); if(!en) return;
+  const reason = document.getElementById("ls-reason").value;
+  en.stage = "lost";
+  en.lostDetails = { reason, other: document.getElementById("ls-other").value.trim() };
+  en.activities.push({id:uid(), type:"Other", date: todayISO(), time: pad(new Date().getHours())+":"+pad(new Date().getMinutes()), user: currentUser.name, notes: `Marked as Lost. Reason: ${reason==="Other"?en.lostDetails.other:reason}.`, nextFollowup:"", createdAt:new Date().toISOString()});
+  saveDB();
+  if(DB.settings && DB.settings.notifyLost){
+    pushNotification({ type:"lost", priority:"medium", title:"Lead lost",
+      message:`${en.company} marked as lost — ${reason==="Other"?en.lostDetails.other:reason}.`,
+      waMessage:`Lead Lost\nCustomer: ${en.company}\nSalesperson: ${en.salesperson}\nReason: ${reason==="Other"?en.lostDetails.other:reason}`,
+      enquiryId: en.id, dedupeKey:`lost-${en.id}` });
+  }
+  closeModal("modal-lost"); renderDetail(); renderNavCounts(); toast("Enquiry marked lost");
+});
+
+/* ============================================================
+   BOOT
+=============================================================== */
+loadDB();
+
+})();
+</script>
+</body>
+</html>
